@@ -37,7 +37,7 @@ import SupportIcon from './icons/IconSupport.vue'
     <template #icon>
       <EcosystemIcon />
     </template>
-    <template #heading>Ecosystem</template>
+    <template #heading>Écosystème</template>
       Ce site fonctionne essentiellement graçe à Neko-sama.fr sur les quelles sont présent l'intégralité des épisodes du site :<br/>
       <a href="https://neko-sama.fr/" target="_blank" rel="noopener">Neko-sama.fr</a><br/>
       <br/>
