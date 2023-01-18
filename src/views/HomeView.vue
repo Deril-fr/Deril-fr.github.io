@@ -15,9 +15,7 @@ const site_description = 'Le seul site pour regardez vos anime préférés en st
 const site_url = 'https://deril-fr.github.io/'
 const site_image = 'https://deril-fr.github.io/favicon.ico'
 
-
-export default {
-  metaInfo: {
+const metaInfo ={
     // Les enfants peuvent remplacer le titre.
     title: 'Japan Watch',
     // Résultat : Titre de ma page ← Mon site
@@ -46,5 +44,9 @@ export default {
       {name: 'twitter:domain', content: 'deril-fr.github.io'},
     ]
   }
+
+export default {
+  name: 'HomeView',
+  metaInfo
 }
 </script>
