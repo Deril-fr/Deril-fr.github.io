@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vime/core": "^5.4.0",
+    "@vime/vue-next": "^5.4.0",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
