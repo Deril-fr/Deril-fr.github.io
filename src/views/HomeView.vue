@@ -10,9 +10,8 @@ import { RouterLink } from 'vue-router';
 
     <div class="wrapper">
       <HelloWorld msg="Bienvenu sur Japan watch !" />
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/app">Application</RouterLink>
       </nav>
     </div>
   </header>
