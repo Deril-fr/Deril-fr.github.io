@@ -4,13 +4,7 @@ const child = spawn('npx', ['vite', 'build'],
     { stdio: 'inherit',
         shell: true
     });
-child.on('error', (err) => {
-    console.log(err.stack);
-});
 
-child.on('exit', (code) => {
-    console.log(`child process exited with code ${code}`);
-});
 
 // When child as finished, this will be called 
 child.on('close', (code) => {
@@ -35,7 +29,7 @@ child.on('close', (code) => {
                     //some err occurred
                     console.error(err)
                 } else {
-                  console.log(`child process exited with code ${code}`);
+                  console.log(`Project uploaded to GitHub`);
                 }
               });
             }
