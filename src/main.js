@@ -10,13 +10,14 @@ import { createVuetify } from 'vuetify'
 const Vuetify = createVuetify({
   theme: {
     themes: {
-      light: {
+      dark: {
         colors: {
-          primary: '#1867C0',
+          primary: '#8F1313',
           secondary: '#5CBBF6',
         },
       },
     },
+      defaultTheme: 'dark'  
   },
 })
 const app = createApp(App)

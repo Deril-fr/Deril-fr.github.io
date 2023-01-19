@@ -11,17 +11,26 @@ import { RouterLink } from 'vue-router';
     <div class="wrapper">
       <HelloWorld msg="Bienvenu sur Japan watch !" />
       <nav>
-        <RouterLink to="/app">Application</RouterLink>
+        <RouterLink to="/app" v-bind:title="routeName">{{ routeName }}</RouterLink>
+
       </nav>
     </div>
   </header>
-
   <main>
     <TheWelcome />
   </main>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      routeName: 'Application',
+    }
+  },
+}
+</script>
 <style scoped>
+
 header {
   line-height: 1.5;
   max-height: 100vh;
