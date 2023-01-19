@@ -1,4 +1,7 @@
 ---
+import AnimeList from "../components/AnimeList.svelte";
+import NoCorsCheck from "../components/NoCorsCheck.svelte";
+import SearchBar from "../components/SearchBar.svelte";
 ---
 
 <html lang="en">
@@ -9,7 +12,12 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="bg-zinc-900 text-white px-10 py-10">
+		
+		<NoCorsCheck client:load>
+			<SearchBar client:load/>
+			<AnimeList client:load/>
+		</NoCorsCheck>
+
 	</body>
 </html>
