@@ -1,6 +1,6 @@
 const { spawn, exec } = require('child_process')
 const fs = require('fs');
-const child = spawn('npx', ['run-p', 'type-check','build-only'],
+const child = spawn('npm', ['run', 'builder'],
     { stdio: 'inherit',
         shell: true
     });
