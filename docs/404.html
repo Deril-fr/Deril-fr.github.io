@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
-    <script type="module" crossorigin src="/assets/index-6c7e8042.js"></script>
-    <link rel="stylesheet" href="/assets/index-2510a841.css">
+    <title>JapanWatch</title>
+    <link rel="manifest" href="/manifest.json">
+    <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+      // Enregistrement réussi
+      console.log('ServiceWorker enregistré avec succès avec scope: ', registration.scope);
+    }, function(err) {
+      // Enregistrement échoué
+      console.log('ServiceWorker enregistrement échoué: ', err);
+    });
+  });
+}
+
+    </script>
+    <script type="module" crossorigin src="/assets/index-5cf7b90d.js"></script>
+    <link rel="stylesheet" href="/assets/index-82bb67fd.css">
   </head>
   <body>
     <div id="app"></div>
