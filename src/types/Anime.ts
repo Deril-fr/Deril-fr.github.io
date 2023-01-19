@@ -15,3 +15,36 @@ export default interface Anime {
     start_date_year: string;
     nb_eps: string;
 }
+
+export enum language {
+    vf = "vf",
+    vostfr = "vostfr"
+}
+
+export interface PstreamData {
+    enableTextTrackSettings: boolean
+    enableTextTrackResize: boolean
+    enableTextTrackExternal: boolean
+    playerLogoInVideoUrl: any
+    playerTitle: any
+    enableAAB: boolean
+    enableADI: boolean
+    subtitlesvtt: Subtitlesvtt[]
+    mmmmmmmmmmmmmmmmmmmm: string
+}
+
+export interface Subtitlesvtt {
+    default: boolean
+    file: string
+    kind: string
+    label: string
+    lang: string
+}
+
+export interface EpisodeReal {
+    episode: number;
+    time: string;
+    title: string;
+    url: string;
+    url_image: string;
+}
