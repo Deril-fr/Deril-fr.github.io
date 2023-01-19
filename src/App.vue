@@ -13,13 +13,6 @@
     fetch("https://neko-sama.fr/animes-search-vostfr.json").then(data => data.json()).then(animes => {
       animesStore.vostfr = animes
     });
-  }else{
-    if('serviceWorker' in navigator) {
-      navigator.serviceWorker.controller?.postMessage(JSON.stringify({ url: "https://neko-sama.fr/animes-search-vostfr.json", action:"fetch" }));
-      navigator.serviceWorker.addEventListener('message', event => {
-        animesStore.vostfr = JSON.parse(event.data);
-      });
-    }
   }
 </script>
 

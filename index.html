@@ -4,22 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JapanWatch</title>
-    <link rel="manifest" href="/manifest.json">
-    <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-      // Enregistrement réussi
-      console.log('ServiceWorker enregistré avec succès avec scope: ', registration.scope);
-    }, function(err) {
-      // Enregistrement échoué
-      console.log('ServiceWorker enregistrement échoué: ', err);
-    });
-  });
-}
-
-    </script>
+    <title>Vite App</title>
   </head>
   <body>
     <div id="app"></div>
