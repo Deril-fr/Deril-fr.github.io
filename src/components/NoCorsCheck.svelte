@@ -3,7 +3,7 @@
 
     let hasNoCors: Boolean;
 
-    fetch("https://neko-sama.fr/animes-search-vf.json").then(data => data.json()).then(animes => {
+    fetch("https://neko-sama.fr/animes-search-vostfr.json").then(data => data.json()).then(animes => {
         $animeVostFr = animes;
         $animesVostFr = animes;
         console.log(animes);

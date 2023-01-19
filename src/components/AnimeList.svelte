@@ -6,12 +6,13 @@
 
 
     let animeChunks: Anime[][] = [];
+    let page = 0;
+
     $: {
         animeChunks = chunk($animeVostFr, 20);
-        console.log($animeVostFr);
+        page = 0;
     }
 
-    let page = 0;
 
     function changePage(p: number) {
         window.scrollTo(0, 0);
