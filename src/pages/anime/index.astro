@@ -1,7 +1,5 @@
 ---
-import AnimeList from "../components/AnimeList.svelte";
-import NoCorsCheck from "../components/NoCorsCheck.svelte";
-import SearchBar from "../components/SearchBar.svelte";
+import AnimePage from "../../components/AnimePage.svelte";
 ---
 
 <html lang="en">
@@ -14,10 +12,7 @@ import SearchBar from "../components/SearchBar.svelte";
 	</head>
 	<body class="bg-zinc-900 text-white px-10 py-10">
 		
-		<NoCorsCheck client:load>
-			<SearchBar client:load/>
-			<AnimeList client:load/>
-		</NoCorsCheck>
+<AnimePage></AnimePage>
 
 	</body>
 </html>

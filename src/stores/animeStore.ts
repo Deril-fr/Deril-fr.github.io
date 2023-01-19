@@ -3,3 +3,5 @@ import type {Anime} from "../types/Anime";
 
 export const animesVostFr = atom<Anime[]>([]);
 export const animeVostFr = atom<Anime[]>([]);
+
+export const ActualAnime = atom<Anime|null>(null);
