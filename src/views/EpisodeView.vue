@@ -4,7 +4,8 @@ import type { PstreamData } from '@/types/Anime';
 import { animesStore, languageStore } from '@/stores/animeStore';
 import router from '@/router';
 import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
-import { ref } from 'vue';
+import { ref, onMounted, onUpdated} from 'vue';
+import hls from 'hls.js';
 
 let episode = router.currentRoute.value.params.episode;
 let id = router.currentRoute.value.params.id;
@@ -26,7 +27,6 @@ if(typeof episode == "string" && typeof id == "string")
             let episode = data.episodes.find(episode => episode.episode == currentEpisode);
             if(episode)
             {
-                console.log(episode);
                 getM3U8("https://neko-sama.fr"+episode.url).then(data => {
                     if(data){
                         video.value = {
@@ -57,11 +57,21 @@ if(typeof episode == "string" && typeof id == "string")
     }
 }
 
+
+onUpdated(() => {
+        if(video.value && video.value.available)
+    {
+        console.log(video.value.uri);
+        let player = document.getElementById("player") as HTMLVideoElement;
+        let hlsPlayer = new hls();
+        hlsPlayer.loadSource(video.value.uri);
+        hlsPlayer.attachMedia(player);
+    }
+});
 </script>
 
 <template>
     <div v-if="video">
-        <video controls :src="video.uri" class="w-full h-full"></video>
+        <video id="player" controls class="w-full h-full"></video>
     </div>
 </template>
-
