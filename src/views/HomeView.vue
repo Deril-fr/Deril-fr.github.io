@@ -1,9 +1,11 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+<script lang="ts">
+    export default {
+        data() {
+            
+        }
+    }
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+    <h1 class="text-red-500">hello world</h1>
 </template>
