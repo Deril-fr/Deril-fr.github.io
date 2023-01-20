@@ -22,13 +22,12 @@ export default {
             });
 
             if (oldQuery !== this.query) return;
-
             const fuse = new Fuse(animesStore.all, {
                 keys: ['title', 'title_english', 'title_romanji', 'genres', 'others', 'id'],
             });
             const result = fuse.search(this.query);
-
-            animesStore.result = removeDuplicates(result.map((a) => a.item));
+            const finaLResult = removeDuplicates(result.map((a) => a.item));
+            animesStore.result = finaLResult.length > 0 ? finaLResult : animesStore.all;
         },
     },
 };
