@@ -12,12 +12,12 @@ const router = createRouter({
     {
       path: '/anime/:id',
       name: 'anime',
-      component: import('../views/AnimeView.vue')
+      component: () => import('../views/AnimeView.vue')
     },
     {
       path: '/anime/:id/episode/:episode',
       name: 'episode',
-      component: import('../views/EpisodeView.vue')
+      component: () => import('../views/EpisodeView.vue')
     }
   ]
 })
