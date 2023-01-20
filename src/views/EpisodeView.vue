@@ -16,7 +16,10 @@ const video = ref<{
             available: boolean,
             baseurl: string,
         }>();
-if(typeof episode == "string" && typeof id == "string")
+
+
+onUpdated(() => {
+    if(typeof episode == "string" && typeof id == "string")
 {
     let currentId = parseInt(id);
     let currentEpisode = parseInt(episode);
@@ -35,6 +38,14 @@ if(typeof episode == "string" && typeof id == "string")
                             available: true,
                             baseurl: data.baseurl
                         };
+                        if(video.value && video.value.available)
+    {
+        console.log(video.value.uri);
+        let player = document.getElementById("player") as HTMLVideoElement;
+        let hlsPlayer = new hls();
+        hlsPlayer.loadSource(video.value.uri);
+        hlsPlayer.attachMedia(player);
+    }
                     }else{
                         $:{
                             console.log("Video not found");
@@ -56,17 +67,6 @@ if(typeof episode == "string" && typeof id == "string")
         router.push("/");
     }
 }
-
-
-onUpdated(() => {
-        if(video.value && video.value.available)
-    {
-        console.log(video.value.uri);
-        let player = document.getElementById("player") as HTMLVideoElement;
-        let hlsPlayer = new hls();
-        hlsPlayer.loadSource(video.value.uri);
-        hlsPlayer.attachMedia(player);
-    }
 });
 </script>
 

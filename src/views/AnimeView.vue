@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onUpdated } from 'vue';
 import { animesStore, languageStore } from '@/stores/animeStore';
 import type Anime from '@/types/Anime';
 import type { EpisodeReal } from '@/types/Anime';
@@ -18,18 +18,22 @@ const datas = ref<{
         episodes: [],
         coverURL: ""
     });
-// get anime from store
-if (typeof id == "string") {
-    let animeFind = animesStore[languageStore.language].find(anime => anime.id == parseInt(id));
-    if (animeFind) {
-        anime.value = animeFind;
-        getSynopsisAndEpisodes(animeFind.url).then(data => {
-            datas.value = data;
-        });
-    } else {
-        router.push("/");
+
+
+onUpdated(() => {
+    if (typeof id == "string") {
+        let animeFind = animesStore[languageStore.language].find(anime => anime.id == parseInt(id));
+        if (animeFind) {
+            anime.value = animeFind;
+            getSynopsisAndEpisodes(animeFind.url).then(data => {
+                datas.value = data;
+            });
+        } else {
+            router.push("/");
+        }
     }
-}
+});
+
 </script>
 <template>
     <div v-if="anime" class="grid grid-cols-1 md:grid-cols-2 gap-10">
