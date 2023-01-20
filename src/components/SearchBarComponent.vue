@@ -1,7 +1,6 @@
 <script lang="ts">
 import { animesStore } from '@/stores/animeStore';
 import { removeDuplicates } from "@/utils/removeDuplicates";
-import Fuse from 'fuse.js';
 
 export default {
     data() {
@@ -22,6 +21,7 @@ export default {
             });
 
             if (oldQuery !== this.query) return;
+            const Fuse = (await import('fuse.js')).default;
             const fuse = new Fuse(animesStore.all, {
                 keys: ['title', 'title_english', 'title_romanji', 'genres', 'others', 'id'],
             });
