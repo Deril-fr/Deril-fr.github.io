@@ -20,7 +20,7 @@ if(typeof episode == "string" && typeof id == "string")
 {
     let currentId = parseInt(id);
     let currentEpisode = parseInt(episode);
-    let anime = animesStore[languageStore.language].find(anime => anime.id == currentId);
+    let anime = animesStore.vostfr.find(anime => anime.id == currentId);
     if(anime)
     {
         getSynopsisAndEpisodes(anime.url).then(data => {
@@ -53,7 +53,6 @@ if(typeof episode == "string" && typeof id == "string")
         $:{
             console.log("Anime not found");
         }
-        router.push("/");
     }
 }
 

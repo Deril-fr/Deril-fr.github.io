@@ -9,5 +9,5 @@ export const animesStore: {vf: Anime[], vostfr: Anime[]} = reactive({
 
 export const languageStore: {language: language} = reactive<{
     language: language}>({
-    language: language.vf
+    language: language.vostfr
 })

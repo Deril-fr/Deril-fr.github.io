@@ -20,16 +20,16 @@ const datas = ref<{
     });
 // get anime from store
 if (typeof id == "string") {
-    let animeFind = animesStore[languageStore.language].find(anime => anime.id == parseInt(id));
+    let animeFind = animesStore.vostfr.find(anime => anime.id == parseInt(id));
     if (animeFind) {
         anime.value = animeFind;
         getSynopsisAndEpisodes(animeFind.url).then(data => {
             datas.value = data;
         });
-    } else {
-        router.push("/");
     }
 }
+
+
 </script>
 <template>
     <div v-if="anime" class="grid grid-cols-1 md:grid-cols-2 gap-10">
