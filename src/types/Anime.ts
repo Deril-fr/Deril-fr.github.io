@@ -16,11 +16,6 @@ export default interface Anime {
     nb_eps: string;
 }
 
-export enum language {
-    vf = "vf",
-    vostfr = "vostfr"
-}
-
 export interface PstreamData {
     enableTextTrackSettings: boolean
     enableTextTrackResize: boolean

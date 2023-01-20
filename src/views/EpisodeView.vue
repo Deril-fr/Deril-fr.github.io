@@ -1,77 +1,52 @@
 <script setup lang="ts">
-import type Anime from '@/types/Anime';
-import type { PstreamData } from '@/types/Anime';
-import { animesStore, languageStore } from '@/stores/animeStore';
+import { animesStore } from '@/stores/animeStore';
+import { languageStore } from '@/stores/languageStore';
 import router from '@/router';
 import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
-import { ref, onMounted, onUpdated} from 'vue';
+import { ref, onUpdated, onBeforeMount, onMounted } from 'vue';
 import hls from 'hls.js';
 
-let episode = router.currentRoute.value.params.episode;
+let currentEpisode = router.currentRoute.value.params.episode;
 let id = router.currentRoute.value.params.id;
+let player: HTMLVideoElement;
 
 const video = ref<{
-            mp4: boolean,
-            uri: string,
-            available: boolean,
-            baseurl: string,
-        }>();
+    mp4: boolean;
+    uri: string;
+    available: boolean;
+    baseurl: string;
+}>();
 
+onMounted(async () => {
 
-onUpdated(() => {
-    if(typeof episode == "string" && typeof id == "string")
-{
-    let currentId = parseInt(id);
-    let currentEpisode = parseInt(episode);
-    let anime = animesStore[languageStore.language].find(anime => anime.id == currentId);
-    if(anime)
-    {
-        getSynopsisAndEpisodes(anime.url).then(data => {
-            let episode = data.episodes.find(episode => episode.episode == currentEpisode);
-            if(episode)
-            {
-                getM3U8("https://neko-sama.fr"+episode.url).then(data => {
-                    if(data){
-                        video.value = {
-                            mp4: false,
-                            uri: data.uri,
-                            available: true,
-                            baseurl: data.baseurl
-                        };
-                        if(video.value && video.value.available)
-    {
-        console.log(video.value.uri);
-        let player = document.getElementById("player") as HTMLVideoElement;
+    let anime = animesStore[languageStore.language].find((anime) => anime.id.toString() == id);
+    if (!anime) return router.push('/');
+
+    let data = await getSynopsisAndEpisodes(anime.url);
+    let episode = data.episodes.find((episode) => episode.episode.toString() == currentEpisode);
+    if (!episode) return router.push('/');
+
+    let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
+    if (!m3u8) return router.push('/');
+
+    video.value = {
+        mp4: false,
+        uri: m3u8.uri,
+        available: true,
+        baseurl: m3u8.baseurl,
+    };
+
+    if (video.value && video.value.available) {
         let hlsPlayer = new hls();
+
         hlsPlayer.loadSource(video.value.uri);
         hlsPlayer.attachMedia(player);
     }
-                    }else{
-                        $:{
-                            console.log("Video not found");
-                        }
-                        router.push("/");
-                    }
-                });
-            }else{
-                $:{
-                    console.log("Episode not found");
-                }
-                router.push("/");
-            }
-        });
-    }else{
-        $:{
-            console.log("Anime not found");
-        }
-        router.push("/");
-    }
-}
 });
 </script>
 
 <template>
-    <div v-if="video">
-        <video id="player" controls class="w-full h-full"></video>
+    <div>
+        <video ref="player" controls class="w-full h-full"></video>
     </div>
 </template>
