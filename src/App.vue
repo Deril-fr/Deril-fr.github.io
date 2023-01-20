@@ -24,8 +24,9 @@
         <h1>L'extension <span class="text-red-500">Allow CORS</span> est requise pour utiliser notre site web</h1>
       </div>
     </div>
-
-    <RouterView v-else />
+    <div v-else>
+    <RouterView />
+    </div>
   </main>
 
 </template>
