@@ -29,6 +29,8 @@ onMounted(async () => {
     let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
     if (!m3u8) return router.push('/');
 
+    console.log(m3u8)
+
     video.value = {
         mp4: false,
         uri: m3u8.uri,
@@ -36,11 +38,15 @@ onMounted(async () => {
         baseurl: m3u8.baseurl,
     };
 
+    console.log(video.value)
+
     if (video.value && video.value.available) {
         let hlsPlayer = new hls();
 
         hlsPlayer.loadSource(video.value.uri);
         hlsPlayer.attachMedia(player);
+
+        console.log(player)
     }
 });
 </script>
