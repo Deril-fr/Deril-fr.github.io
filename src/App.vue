@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import AnimeCardComponent from './components/AnimeCardComponent.vue';
+import SpinnerComponent from './components/SpinnerComponent.vue';
+import HomeSkeleton from "./components/HomeSkeleton.vue";
 import { animesStore } from './stores/animeStore';
 </script>
 
@@ -6,43 +9,42 @@ import { animesStore } from './stores/animeStore';
 export default {
     data() {
         return {
-            isNoCorsInstalled: false,
+            isNoCorsInstalled: true,
         };
     },
 
     methods: {
         loadAnimesAndCheckCors: async function () {
-            animesStore.vf = await (await fetch('https://neko-sama.fr/animes-search-vf.json')).json();
-            animesStore.vostfr = await (await fetch('https://neko-sama.fr/animes-search-vostfr.json')).json();
-            this.isNoCorsInstalled = true;
+            try {
+                animesStore.vf = await (await fetch("https://neko-sama.fr/animes-search-vf.json")).json();
+                animesStore.vostfr = await (await fetch("https://neko-sama.fr/animes-search-vostfr.json")).json();
+            } catch (e) {
+                this.isNoCorsInstalled = false;
+            }
         },
     },
 
     async mounted() {
         await this.loadAnimesAndCheckCors();
-
         let animesVf = animesStore.vf.map((anime) => {
             anime.lang = "vf";
             return anime;
         });
-
         let animesVostfr = animesStore.vostfr.map((anime) => {
             anime.lang = "vostfr";
             return anime;
         });
-
         animesStore.all = [...animesVf, ...animesVostfr];
+        animesStore.result = [...animesStore.all];
     },
+    components: { SpinnerComponent, AnimeCardComponent, HomeSkeleton }
 };
 </script>
 
 <template>
-    <main class="bg-zinc-900 text-white min-h-screen px-10">
-        <div class="w-screen h-screen grid justify-items-center items-center" v-if="isNoCorsInstalled == false">
-            <div class="bg-red-900 bg-opacity-50 p-5 rounded">
-                <h1>L'extension <span class="text-red-500">Allow CORS</span> est requise pour utiliser notre site web</h1>
-            </div>
-        </div>
+    <main class="bg-zinc-900 text-white min-h-screen">
+
+        <HomeSkeleton v-if="animesStore.all.length <= 0"/>
 
         <div v-if="isNoCorsInstalled && animesStore.all.length > 0">
             <RouterView />

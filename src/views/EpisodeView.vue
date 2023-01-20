@@ -54,6 +54,6 @@ export default {
 
 <template>
     <div>
-        <video ref="player" controls class="w-full h-full"></video>
+        <video ref="player" controls class="w-full h-screen"></video>
     </div>
 </template>

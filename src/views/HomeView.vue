@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import AnimeCardComponent from '@/components/AnimeCardComponent.vue';
+import SearchBarComponent from '@/components/SearchBarComponent.vue';
 import { animesStore } from '@/stores/animeStore';
 import type Anime from '@/types/Anime';
 import chunkify from '@/utils/chunkify';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 
-let animeChunks = ref<Anime[][]>(chunkify(animesStore.all, 30));
+let animeChunks = ref<Anime[][]>(chunkify(animesStore.result, 30));
 let page = ref(0);
+
+watch(animesStore, function () {
+    animeChunks.value = chunkify(animesStore.result, 30); 
+    console.log(animesStore.result.filter(function(a) {
+        return a.title.includes("Hunter x Hunter");
+    }))
+});
 
 function changePage(n: number) {
     console.log(n);
@@ -27,9 +35,11 @@ function changePage(n: number) {
 </script>
 
 <template>
-    <section v-if="animeChunks">
+    <section v-if="animeChunks" class="px-10">
+        <SearchBarComponent/>
+
         <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-10">
-            <div v-for="anime in animeChunks.at(page)" :key="anime.id">
+            <div v-for="anime in animeChunks.at(page)" :key="anime.id + (anime.lang as string)">
                 <AnimeCardComponent :anime="anime" />
             </div>
         </div>

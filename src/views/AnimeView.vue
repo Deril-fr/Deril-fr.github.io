@@ -25,32 +25,40 @@ export default {
 </script>
 
 <template>
-    <div v-if="anime && datas?.coverURL" class="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div class="flex flex-col">
-            <img class="w-full rounded object-cover aspect-[13/9]" :src="datas?.coverURL" alt="" />
-            <div class="mt-5">
-                <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ anime.title }}</h5>
-                <h6>{{ anime.start_date_year }} - {{ anime.nb_eps }}</h6>
-            </div>
-        </div>
+    <div v-if="anime && datas?.coverURL">
 
-        <div class="flex flex-col">
-            <h1 class="text-2xl font-bold">Synopsis</h1>
-            <p class="mt-5">{{ datas?.synopsis }}</p>
-            <div class="mt-5">
-                <h1 class="text-2xl font-bold">Episodes</h1>
-                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div v-for="episode in datas?.episodes" :key="episode.episode">
-                        <div class="w-full" @click="anime && $router.push('/anime/' + language + '/' + anime.id + '/episode/' + episode.episode)">
-                            <img class="w-full rounded object-cover aspect-[13/9]" :src="episode.url_image" alt="" />
-                            <div class="mt-5 grid">
-                                <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ episode.title }}</h5>
-                                <h6>Ep. {{ episode.episode }}</h6>
+        <div class="z-20 relative px-[10vw] lg:px-[20vw] py-10 grid lg:grid-cols-2 gap-5">
+            <img class="w-full rounded" :src="anime.url_image.replace('/2/', '/1/')" alt="">
+
+            <div class="flex flex-col gap-5">
+                <div>
+                    <h1 class="font-bold text-lg lg:text-3xl">{{ anime.title }}</h1>
+                    <h2 class="lg:text-xl">{{ anime.start_date_year }} - {{ datas.episodes.length }} eps</h2>
+                </div>
+
+                <p class="lg:text-lg">{{ datas.synopsis }}</p>
+
+                <div class="grid 2xl:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-2 hover:cursor-pointer group" @click="$router.push('/anime/' + language + '/' + animeId + '/episode/' + episode.episode)" v-for="episode in datas.episodes">
+                        <div class="aspect-[16/9] w-full relative">
+                            <div class="w-full h-full bg-zinc-900 opacity-0 group-hover:opacity-100 bg-opacity-60 transition absolute top-0 left-0 grid items-center justify-center">
+                                <p class="font-bold text-lg">PLAY</p>
                             </div>
+                            <img class="w-full h-full object-cover" v-lazy="{ src: episode.url_image, loading: '/default_thumbnail.png' }" alt="">
+                        </div>
+                        <div>
+                            <h5 class="whitespace-nowrap overflow-hidden text-ellipsis text-lg font-semibold">{{ episode.title }}</h5>
+                            <h6>EP. {{ episode.episode }}</h6>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <div class="w-full h-[80vh] z-0 absolute top-0">
+            <img :src="datas?.coverURL" class="h-full w-full object-cover opacity-20" alt="">
+            <div class="absolute bg-gradient-to-t top-0 from-zinc-900 w-full h-full z-10"></div>
+        </div>
+
     </div>
 </template>
