@@ -13,7 +13,6 @@ export default {
         async search() {
             console.log("test");
             let oldQuery = this.query;
-
             await new Promise(function (ok) {
                 setTimeout(function () {
                     ok(null);
