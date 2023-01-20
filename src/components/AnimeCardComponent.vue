@@ -1,14 +1,13 @@
 <script setup lang="ts">
     import type Anime from '@/types/Anime';
-
+    import router from '@/router';
     const props = defineProps<{
         anime: Anime
     }>();
 </script>
 
 <template>
-    <a :href="`/anime/${props.anime.id}`">
-    <div class="w-full">
+    <div class="w-full" @click="router.push('/anime/'+props.anime.id)">
         <img class="w-full rounded object-cover aspect-[9/13]" :src="props.anime.url_image" alt=""/>
 
         <div class="mt-5 grid">
@@ -16,5 +15,4 @@
             <h6>{{ props.anime.start_date_year }} - {{ props.anime.nb_eps }}</h6>
         </div>
     </div>
-    </a>
 </template>

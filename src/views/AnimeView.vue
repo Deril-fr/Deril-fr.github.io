@@ -47,15 +47,13 @@ if (typeof id == "string") {
                 <h1 class="text-2xl font-bold">Episodes</h1>
                 <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div v-for="episode in datas.episodes" :key="episode.episode">
-                        <a :href="`/anime/${anime.id}/episode/${episode.episode}`">
-                            <div class="w-full">
+                            <div class="w-full" @click="anime && router.push('/anime/'+anime.id+'/episode/'+episode.episode)">
                                 <img class="w-full rounded object-cover aspect-[13/9]" :src="episode.url_image" alt=""/>
                                 <div class="mt-5 grid">
                                     <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ episode.title }}</h5>
                                     <h6>Ep. {{ episode.episode }}</h6>
                                 </div>
                             </div>
-                        </a>
                     </div>
                 </div>
             </div>
