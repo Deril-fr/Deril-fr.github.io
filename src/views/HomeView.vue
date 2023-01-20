@@ -5,7 +5,7 @@ import type Anime from '@/types/Anime';
 import chunkify from '@/utils/chunkify';
 import { onBeforeMount, ref } from 'vue';
 
-let animeChunks = ref<Anime[][]>(chunkify(animesStore.vostfr, 30));
+let animeChunks = ref<Anime[][]>(chunkify(animesStore.all, 30));
 let page = ref(0);
 
 function changePage(n: number) {

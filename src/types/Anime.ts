@@ -14,6 +14,7 @@ export default interface Anime {
     score: string;
     start_date_year: string;
     nb_eps: string;
+    lang?: "vostfr"|"vf";
 }
 
 export interface PstreamData {

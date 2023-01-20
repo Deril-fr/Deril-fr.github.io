@@ -12,12 +12,12 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/anime/:id',
+      path: '/anime/:lang/:id',
       name: 'anime',
       component: AnimeView
     },
     {
-      path: '/anime/:id/episode/:episode',
+      path: '/anime/:lang/:id/episode/:episode',
       name: 'episode',
       component: EpisodeView
     }

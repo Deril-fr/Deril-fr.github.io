@@ -1,7 +1,5 @@
 <script lang="ts">
-import router from '@/router';
 import { animesStore } from '@/stores/animeStore';
-import { languageStore } from '@/stores/languageStore';
 import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
@@ -9,8 +7,10 @@ import hls from 'hls.js';
 export default {
     data() {
         return {
-            currentEpisode: router.currentRoute.value.params.episode,
-            id: router.currentRoute.value.params.id,
+            currentEpisode: this.$router.currentRoute.value.params.episode,
+            language: this.$router.currentRoute.value.params.lang as string,
+            animeId: this.$router.currentRoute.value.params.id,
+
             video: ref() as Ref<{
                 mp4: boolean;
                 uri: string;
@@ -21,17 +21,17 @@ export default {
     },
 
     async mounted() {
-        let anime = animesStore[languageStore.language].find((anime) => anime.id.toString() == this.id);
-        if (!anime) return router.push('/');
+        if (this.language != "vf" && this.language != "vostfr") return this.$router.push("/");
+        let anime = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
+        
+        if (!anime) return this.$router.push('/');
 
         let data = await getSynopsisAndEpisodes(anime.url);
         let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
-        if (!episode) return router.push('/');
+        if (!episode) return this.$router.push('/');
 
         let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
-        if (!m3u8) return router.push('/');
-
-        console.log(m3u8);
+        if (!m3u8) return this.$router.push('/');
 
         this.video = {
             mp4: false,
@@ -39,8 +39,6 @@ export default {
             available: true,
             baseurl: m3u8.baseurl,
         };
-
-        console.log(this.video);
 
         if (this.video && this.video.available) {
             let hlsPlayer = new hls();
