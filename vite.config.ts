@@ -8,10 +8,11 @@ export default defineConfig({
   plugins: [vue(), splitVendorChunkPlugin()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'hls.js': 'hls.js/dist/hls.min.js',
     }
   },
   build: {
-    outDir: "docs"
-  }
+    outDir: "docs",
+  },
 })

@@ -10,7 +10,16 @@ export default {
             currentEpisode: this.$router.currentRoute.value.params.episode,
             language: this.$router.currentRoute.value.params.lang as string,
             animeId: this.$router.currentRoute.value.params.id,
-
+            player: {
+                volume: 100,
+                currentTime: 0,
+                duration: 0,
+                paused: true,
+                controls: true,
+                muted: false,
+                src: '',
+                video: null,
+            },
             video: ref() as Ref<{
                 mp4: boolean;
                 uri: string;
@@ -50,6 +59,7 @@ export default {
         }
     },
 };
+
 </script>
 
 <template>
