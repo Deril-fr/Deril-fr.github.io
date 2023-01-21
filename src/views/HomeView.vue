@@ -14,6 +14,7 @@ watch(animesStore, function () {
     console.log(animesStore.result.filter(function(a) {
         return a.title.includes("Hunter x Hunter");
     }))
+    changePage(0);
 });
 
 function changePage(n: number) {
@@ -36,6 +37,16 @@ function changePage(n: number) {
 
 <template>
     <section v-if="animeChunks" class="px-10">
+        <div class="flex justify-between py-5">
+            <div @click="$router.push('/latest')" class="cursor-pointer">
+                <h1 class="text-3xl font-bold">Dernières sorties</h1>
+            </div>
+            <div class="flex gap-5">
+                <button @click="changePage(page-1)">prev</button>
+                <p>{{ page + 1 }}/{{ animeChunks.length }}</p>
+                <button @click="changePage(page+1)">next</button>
+            </div>
+        </div>
         <SearchBarComponent/>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-10">

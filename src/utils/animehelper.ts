@@ -1,4 +1,5 @@
-import type { PstreamData, EpisodeReal } from "@/types/Anime";
+import type Anime from "@/types/Anime";
+import type { PstreamData, EpisodeReal, LastEpisodes } from "@/types/Anime";
 import { load } from "cheerio";
 
 export default async function getM3U8(episodeUrl: string) {
@@ -42,7 +43,7 @@ function convertHtmlToText(html: string) {
 }
 
 
-function convertEpisodeToNumber(episode: string) {
+export function convertEpisodeToNumber(episode: string) {
     return Number(episode.replace("Ep. ", ""));
 }
 
@@ -78,3 +79,13 @@ export async function getSynopsisAndEpisodes(url: string) {
     }
 }
 
+export async function getLastViewed(): Promise<LastEpisodes[]> {
+    const res = await fetch("https://neko-sama.fr")
+    const data = await res.text();
+    let lastEpisode: LastEpisodes[]= [];
+    const parsedData = /var lastEpisodes = (.+)\;/gm.exec(data);
+    if (parsedData) {
+       lastEpisode = JSON.parse(parsedData[1]);
+    }
+    return lastEpisode;
+}
