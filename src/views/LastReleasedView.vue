@@ -18,6 +18,8 @@ getLastViewed().then((lastEpisodes) => {
             animes: anime,
             lastEpisodes: lastEpisodes.find((lastEpisode) => lastEpisode.anime_url === anime.url) as LastEpisodes
         };
+    }).sort((a, b) => {
+        return b.lastEpisodes.timestamp- a.lastEpisodes.timestamp;
     });
 });
 </script>

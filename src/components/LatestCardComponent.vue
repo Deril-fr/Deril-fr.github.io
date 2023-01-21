@@ -2,6 +2,7 @@
 import type Anime from '@/types/Anime';
 import type { LastEpisodes } from '@/types/Anime';
 import { convertEpisodeToNumber } from '@/utils/animehelper';
+import getTimeAgo from '@/utils/timer';
 import type { PropType } from 'vue';
 
 export default {
@@ -10,7 +11,8 @@ export default {
         animeReal: Object as PropType<Anime>,
     },
     methods: {
-        convertEpisodeToNumber
+        convertEpisodeToNumber,
+        getTimeAgo
     }
 }
 </script>
@@ -23,7 +25,7 @@ export default {
 
         <div class="mt-5 grid">
             <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ anime?.title }}</h5>
-            <h6>Episode {{ convertEpisodeToNumber(anime.episode) }}</h6>
+            <h6>Episode {{ convertEpisodeToNumber(anime.episode) }} - {{ getTimeAgo(anime.timestamp) }}</h6>
         </div>
     </div>
     </div>
