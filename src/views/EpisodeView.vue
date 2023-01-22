@@ -3,6 +3,7 @@ import { animesStore } from '@/stores/animeStore';
 import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
+import { getAnime, setAnime } from '@/utils/storage';
 
 export default {
     data() {
@@ -48,14 +49,30 @@ export default {
             available: true,
             baseurl: m3u8.baseurl,
         };
-
+        // check if anime is already in the storage
+       const animeWatched = getAnime(parseInt(this.animeId.toString()), parseInt(this.currentEpisode.toString()), this.language)
         if (this.video && this.video.available) {
             let hlsPlayer = new hls();
 
             hlsPlayer.loadSource(this.video.uri);
             hlsPlayer.attachMedia(this.$refs.player as HTMLMediaElement);
-
-            console.log(this.$refs.player as HTMLMediaElement);
+            setTimeout(() => {
+                if (animeWatched) {
+                    (this.$refs.player as HTMLMediaElement).currentTime = animeWatched.time;
+                }
+                if (this.$refs.player as HTMLMediaElement && (this.$refs.player as HTMLMediaElement).paused) {
+                    (this.$refs.player as HTMLMediaElement).play();
+                }
+            }, 1000);
+            // setup a listener when the video time is updated 
+            (this.$refs.player as HTMLMediaElement).addEventListener('timeupdate', () => {
+                setAnime({
+                    id:parseInt(this.animeId.toString()),
+                    episode:parseInt(this.currentEpisode.toString()),
+                    time: (this.$refs.player as HTMLMediaElement).currentTime,
+                    lang: this.language,
+                });
+            });
         }
     },
 };
@@ -64,6 +81,6 @@ export default {
 
 <template>
     <div>
-        <video ref="player" controls class="w-full h-screen"></video>
+        <video ref="player" controls autoplay="true" class="w-full h-screen"></video>
     </div>
 </template>

@@ -41,6 +41,9 @@ function changePage(n: number) {
             <div @click="$router.push('/latest')" class="cursor-pointer">
                 <h1 class="text-3xl font-bold">Dernières sorties</h1>
             </div>
+            <div @click="$router.push('/history')" class="cursor-pointer">
+                <h1 class="text-3xl font-bold">Historique</h1>
+            </div>
             <div class="flex gap-5">
                 <button @click="changePage(page-1)">prev</button>
                 <p>{{ page + 1 }}/{{ animeChunks.length }}</p>

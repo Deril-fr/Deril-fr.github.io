@@ -57,3 +57,10 @@ export interface LastEpisodes {
     url_bg: string;
     url_image: string;
 }
+
+export interface AnimeWatched {
+    id: number;
+    episode: number;
+    time: number;
+    lang: string;
+}

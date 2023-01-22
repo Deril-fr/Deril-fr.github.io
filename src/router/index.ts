@@ -22,7 +22,12 @@ const router = createRouter({
       path: '/anime/:lang/:id/episode/:episode',
       name: 'episode',
       component: () => import('../views/EpisodeView.vue')
-    }
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: () => import('../views/AnimeHistory.vue')
+    },
   ]
 })
 

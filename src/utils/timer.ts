@@ -23,3 +23,15 @@ export default function getTimeAgo(timestamp: number): string {
     }
     return `Il y a ${years} ans`;
 };
+export function getDuration(duration: number): string {
+    const seconds = Math.floor(duration % 60);
+    const minutes = Math.floor((duration / 60) % 60);
+    const hours = Math.floor((duration / 3600) % 24);
+    if (hours > 0) {
+        return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    if (minutes > 0) {
+        return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
+};
