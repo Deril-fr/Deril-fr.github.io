@@ -4,6 +4,7 @@ import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
 import { getAnime, setAnime } from '@/utils/storage';
+import Plyr from 'plyr';
 
 export default {
     data() {
@@ -27,6 +28,8 @@ export default {
                 available: boolean;
                 baseurl: string;
             }>,
+            innerHeight: window.innerHeight,
+            innerWidth: window.innerWidth,
         };
     },
 
@@ -51,6 +54,18 @@ export default {
         };
         // check if anime is already in the storage
        const animeWatched = getAnime(parseInt(this.animeId.toString()), parseInt(this.currentEpisode.toString()), this.language)
+
+       const player = new Plyr('#playme',{
+        storage: {
+            enabled: true,
+            key: 'videoPlayer'
+        },
+       });
+       window.addEventListener("resize", () => {
+              this.innerHeight = window.innerHeight;
+              this.innerWidth = window.innerWidth;
+            });
+
         if (this.video && this.video.available) {
             let hlsPlayer = new hls();
 
@@ -81,6 +96,6 @@ export default {
 
 <template>
     <div>
-        <video ref="player" controls autoplay="true" class="w-full h-screen"></video>
+        <video ref="player" id="playme" autoplay="true"> </video>
     </div>
 </template>
