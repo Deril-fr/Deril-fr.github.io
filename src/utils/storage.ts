@@ -8,7 +8,6 @@ export function setAnime(episode: AnimeWatched) {
     if (currentEpisodes.find((e) => e.id === episode.id && e.lang === episode.lang)) {
         currentEpisodes = currentEpisodes.filter((e) => e.id !== episode.id || e.lang !== episode.lang);
         currentEpisodes.push(episode);
-        console.log("Updated episode");
       }
       
     // set animeListArray to localStorage
