@@ -5,11 +5,13 @@ import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
 import { getAnime, setAnime } from '@/utils/storage';
 import Plyr from 'plyr';
+import type Anime from '@/types/Anime';
+
 
 export default {
     data() {
         return {
-            currentEpisode: this.$router.currentRoute.value.params.episode,
+            currentEpisode: this.$router.currentRoute.value.params.episode.toString(),
             language: this.$router.currentRoute.value.params.lang as string,
             animeId: this.$router.currentRoute.value.params.id,
             player: {
@@ -28,6 +30,7 @@ export default {
                 available: boolean;
                 baseurl: string;
             }>,
+            title: '',
             innerHeight: window.innerHeight,
             innerWidth: window.innerWidth,
         };
@@ -35,7 +38,8 @@ export default {
 
     async mounted() {
         if (this.language != "vf" && this.language != "vostfr") return this.$router.push("/");
-        let anime = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
+        let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
+        const setVideoPlayer = async (anime: Anime) =>{
         
         if (!anime) return this.$router.push('/');
 
@@ -60,10 +64,23 @@ export default {
             enabled: true,
             key: 'videoPlayer'
         },
+        autoplay: true,
+        markers:{
+            enabled: true,
+            points:[{
+                time: 0,
+                label: "Début de l'intro",
+            },{
+                time:90,
+                label:"Fin de l'intro",
+            }]
+        },
        });
+       this.title = anime.title;
+       (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
+       
        window.addEventListener("resize", () => {
-              this.innerHeight = window.innerHeight;
-              this.innerWidth = window.innerWidth;
+        (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
             });
 
         if (this.video && this.video.available) {
@@ -74,6 +91,9 @@ export default {
             setTimeout(() => {
                 if (animeWatched) {
                     (this.$refs.player as HTMLMediaElement).currentTime = animeWatched.time;
+                }else{
+                    (this.$refs.player as HTMLMediaElement).currentTime = 0;
+                    (this.$refs.player as HTMLMediaElement).play();
                 }
                 if (this.$refs.player as HTMLMediaElement && (this.$refs.player as HTMLMediaElement).paused) {
                     (this.$refs.player as HTMLMediaElement).play();
@@ -88,7 +108,14 @@ export default {
                     lang: this.language,
                 });
             });
+            (this.$refs.player as HTMLMediaElement).addEventListener('ended', async () => {
+                this.$router.push(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
+                this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
+                await setVideoPlayer(anime);
+            });
         }
+        }
+        await setVideoPlayer(animeExist as Anime);
     },
 };
 
@@ -96,6 +123,7 @@ export default {
 
 <template>
     <div>
-        <video ref="player" id="playme" autoplay="true"> </video>
+        <video ref="player" id="playme" autoplay="true" data-plyr-config='{ "title": "{{ this.title }}" }'> </video>
     </div>
 </template>
+
