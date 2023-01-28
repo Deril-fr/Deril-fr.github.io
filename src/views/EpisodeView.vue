@@ -41,7 +41,15 @@ export default {
         let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
         const setVideoPlayer = async (anime: Anime) =>{
         
-        if (!anime) return this.$router.push('/');
+        if (!anime){
+            // check if the route before was the history page or the home page
+            if (this.$router.currentRoute.value.meta.from == "history"){
+                this.$router.push("/history");
+            }else{
+                this.$router.push("/");
+            }
+            return;
+        }
 
         let data = await getSynopsisAndEpisodes(anime.url);
         let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
