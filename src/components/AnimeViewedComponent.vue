@@ -8,6 +8,7 @@ export default {
     props: {
         anime: Object as PropType<AnimeWatched>,
         animeReal: Object as PropType<Anime>,
+        asNew: Boolean
     },
     methods: {
         convertEpisodeToNumber,
@@ -19,6 +20,7 @@ export default {
 <template>
     <div v-if="anime">
     <div class="w-full" @click="$router.push('/anime/' + anime?.lang + '/' + animeReal?.id + '/episode/' + anime?.episode.toString())"> 
+        <p v-if="asNew" class="bg-green-500 p-3 ml-16 rounded absolute">NEW épisodes dispo ! </p>
         <p v-if="anime?.lang == 'vf'" class="bg-red-500 p-3 rounded absolute">VF</p>
         <img class="w-full rounded object-cover aspect-[9/13]" v-lazy="{ src: animeReal?.url_image, loading: '/default_thumbnail.png' }" alt="" />
 

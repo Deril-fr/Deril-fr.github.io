@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import AnimeViewedComponent from '@/components/AnimeViewedComponent.vue';
-import LatestCardComponent from '@/components/LatestCardComponent.vue';
 import { animesStore } from '@/stores/animeStore';
-import type { AnimeWatched, LastEpisodes } from '@/types/Anime';
+import type { AnimeWatched } from '@/types/Anime';
 import type Anime from '@/types/Anime';
-import { getLastViewed } from '@/utils/animehelper';
-import { removeDuplicates } from '@/utils/removeDuplicates';
+import { getLastViewed, convertEpisodeToNumber} from '@/utils/animehelper';
 import { getAnimeList } from '@/utils/storage';
 import { ref } from 'vue';
 
 let animeChunks = ref<{
     animes: Anime;
     lastEpisodes: AnimeWatched;
+    asNew: boolean;
 }[]>();
 const animeList = getAnimeList();
-console.log(animeList.length);
+getLastViewed().then((lastEpisodes) => {
     let animes = animesStore.all.filter((anime) => animeList.find((lastEpisode) => lastEpisode.id === anime.id && lastEpisode.lang === anime.lang));
-    console.log(animes.length);
     animeChunks.value = animes.map((anime) => {
+        let lastStreamed = lastEpisodes.find((lastEpisode) => lastEpisode.anime_url === anime.url);
         return {
             animes: anime,
-            lastEpisodes: animeList.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched
+            lastEpisodes: animeList.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched,
+            asNew: lastStreamed ? (animeList.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched).episode < convertEpisodeToNumber(lastStreamed.episode)  : false,
         };
     });
+});
 </script>
 
 <template>
@@ -34,7 +35,7 @@ console.log(animeList.length);
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-10">
             <div v-for="anime in animeChunks" :key="anime.lastEpisodes.id + (anime.lastEpisodes.lang as string)">
-                <AnimeViewedComponent :animeReal="anime.animes" :anime="anime.lastEpisodes"/>
+                <AnimeViewedComponent :animeReal="anime.animes" :anime="anime.lastEpisodes" :asNew="anime.asNew" />
             </div>
         </div>
     </section>

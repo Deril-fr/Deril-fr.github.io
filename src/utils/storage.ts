@@ -8,7 +8,9 @@ export function setAnime(episode: AnimeWatched) {
     if (currentEpisodes.find((e) => e.id === episode.id && e.lang === episode.lang)) {
         currentEpisodes = currentEpisodes.filter((e) => e.id !== episode.id || e.lang !== episode.lang);
         currentEpisodes.push(episode);
-      }
+      }else{
+        currentEpisodes.push(episode);
+        }
       
     // set animeListArray to localStorage
     localStorage.setItem("animeList", JSON.stringify(removeDuplicates(currentEpisodes)));
