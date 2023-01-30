@@ -73,16 +73,10 @@ export default {
             key: 'videoPlayer'
         },
         autoplay: true,
-        markers:{
+        ads:{
             enabled: true,
-            points:[{
-                time: 0,
-                label: "Début de l'intro",
-            },{
-                time:90,
-                label:"Fin de l'intro",
-            }]
-        },
+            tagUrl: "https://www.videosprofitnetwork.com/watch.xml?key=10d4e51c8317bddf7b44f0ccc6771454"
+        }
        });
        this.title = anime.title;
        (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
