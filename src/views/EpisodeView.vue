@@ -50,10 +50,10 @@ export default {
 
         let data = await getSynopsisAndEpisodes(anime.url);
         let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
-        if (!episode) return this.$router.push('/');
+        if (!episode) return this.$router.back();
 
         let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
-        if (!m3u8) return this.$router.push('/');
+        if (!m3u8) return this.$router.back();
 
         this.video = {
             mp4: false,
