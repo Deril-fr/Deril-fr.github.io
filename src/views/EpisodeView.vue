@@ -4,7 +4,6 @@ import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
 import { getAnime, setAnime } from '@/utils/storage';
-import Plyr from 'plyr';
 import type Anime from '@/types/Anime';
 
 
@@ -64,7 +63,8 @@ export default {
         };
         // check if anime is already in the storage
        const animeWatched = getAnime(parseInt(this.animeId.toString()), parseInt(this.currentEpisode.toString()), this.language)
-
+    // dynamic import plyr
+    const { default: Plyr } = await import('plyr');
        const player = new Plyr('#playme',{
         storage: {
             enabled: true,
