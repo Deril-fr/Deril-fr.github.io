@@ -77,7 +77,6 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                 if(lastUpdated && data.updatedAt) {
                                     if (Number(lastUpdated) < data.updatedAt) {
                                         localStorage.setItem("animeList", JSON.stringify(data.animeList));
-                                        localStorage.setItem("lastUpdated", String(data.updatedAt));
                                     } else {
                                         await updateDoc(docRef, {
                                             animeList: JSON.parse(animeList),
