@@ -53,7 +53,6 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
 
             if (docSnap) {
                 const data = docSnap.data();
-                console.log(data);
                 if (data) {
                     // check if at least one anime is in the list as changed from the remote one
                     if (animeList) {
