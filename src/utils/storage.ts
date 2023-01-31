@@ -90,6 +90,7 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                 }
             }
         }
+    }
         // if animeList is null, return undefined
         const animeListArray: AnimeWatched[] = animeList ? JSON.parse(animeList) : tempData;
         // return animeListArray
