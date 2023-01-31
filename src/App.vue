@@ -5,7 +5,6 @@ import HomeSkeleton from "./components/HomeSkeleton.vue";
 import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
 import {getRedirectResult } from "firebase/auth";
-import { getAnimeList } from './utils/storage';
 </script>
 
 <script lang="ts">
@@ -49,9 +48,6 @@ export default {
         animesStore.all = [...animesVf, ...animesVostfr];
         animesStore.result = [...animesStore.all];
         // handle if user leave the page or close the tab 
-        window.addEventListener("beforeunload", () => {
-            getAnimeList();
-        });
     },
     components: { SpinnerComponent, AnimeCardComponent, HomeSkeleton }
 };
