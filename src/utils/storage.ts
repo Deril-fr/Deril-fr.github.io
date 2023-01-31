@@ -13,7 +13,7 @@ export async function setAnime(episode: AnimeWatched) {
     } else {
         currentEpisodes.push(episode);
     }
-
+    localStorage.setItem("lastUpdated", String(Date.now()));
     localStorage.setItem("animeList", JSON.stringify(removeDuplicates(currentEpisodes)));
     // set animeListArray to localStorage
 
@@ -43,6 +43,7 @@ export function removeAnime(id: number) {
 export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched[]> {
     // get Anime from localStorage 
     const animeList = localStorage.getItem("animeList");
+    const lastUpdated = localStorage.getItem("lastUpdated");
     let tempData: AnimeWatched = [] as unknown as AnimeWatched;
     if (remote) {
         const user = auth.currentUser;
@@ -73,9 +74,24 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                 }
                             }
                             if (changed) {
-                                updateDoc(docRef, {
-                                    animeList: animesWatched
-                                });
+                                if(lastUpdated && data.updatedAt) {
+                                    if (Number(lastUpdated) < data.updatedAt) {
+                                        localStorage.setItem("animeList", JSON.stringify(data.animeList));
+                                        localStorage.setItem("lastUpdated", String(data.updatedAt));
+                                    } else {
+                                        await updateDoc(docRef, {
+                                            animeList: JSON.parse(animeList),
+                                            updatedAt: Date.now(),
+                                        });
+                                        localStorage.setItem("lastUpdated", String(Date.now()));
+                                    }
+                                } else {
+                                    await updateDoc(docRef, {
+                                        animeList: JSON.parse(animeList),
+                                        updatedAt: Date.now(),
+                                    });
+                                    localStorage.setItem("lastUpdated", String(data.updatedAt));
+                                }
                             }
                         } 
 
@@ -87,7 +103,8 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                 }else {
                     if (animeList) {
                         setDoc(docRef, {
-                            animeList: JSON.parse(animeList)
+                            animeList: JSON.parse(animeList),
+                            updatedAt: Date.now(),
                         });
                     }
                 }
