@@ -42,7 +42,7 @@ export function removeAnime(id: number) {
 
 export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched[]> {
     // get Anime from localStorage 
-    const animeList = localStorage.getItem("animeList");
+    let animeList = localStorage.getItem("animeList");
     const lastUpdated = localStorage.getItem("lastUpdated");
     let tempData: AnimeWatched = [] as unknown as AnimeWatched;
     if (remote) {
@@ -77,6 +77,7 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                 if(lastUpdated && data.updatedAt) {
                                     if (Number(lastUpdated) < data.updatedAt) {
                                         localStorage.setItem("animeList", JSON.stringify(data.animeList));
+                                        animeList = JSON.stringify(data.animeList);
                                     } else {
                                         await updateDoc(docRef, {
                                             animeList: JSON.parse(animeList),
