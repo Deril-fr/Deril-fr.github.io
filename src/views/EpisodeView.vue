@@ -45,11 +45,7 @@ export default {
         if (!anime){        
 
             // check if the route before was the history page or the home page
-            if (this.$router.currentRoute.value.meta.from == "history"){
-                this.$router.push("/history");
-            }else{
-                this.$router.push("/");
-            }
+            this.$router.back();
             return;
         }
 
@@ -83,6 +79,26 @@ export default {
         (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
             });
 
+
+        document.addEventListener("keypress", (event) => {
+            // if user press spacebar then pause or play the video
+            switch (event.code) {
+                case "Space":
+                    if (player.paused) {
+                        player.play();
+                    } else {
+                        player.pause();
+                    }
+                    break;
+                case "KeyF":
+                    player.fullscreen.toggle();
+                    break;
+                case "KeyM":
+                    player.muted = !player.muted;
+                    break;
+            }
+
+        });
         if (this.video && this.video.available) {
             let hlsPlayer = new hls();
 
@@ -109,7 +125,8 @@ export default {
                 });
             });
             (this.$refs.player as HTMLMediaElement).addEventListener('ended', async () => {
-                this.$router.push(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
+                (this.$refs.player as HTMLMediaElement).currentTime = 0;
+                this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
                 this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
                 await setVideoPlayer(anime);
             });
