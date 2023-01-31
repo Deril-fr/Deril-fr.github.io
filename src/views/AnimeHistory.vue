@@ -31,7 +31,7 @@ getAnimeList().then((animeList) => {
     <section  class="px-10">
         <div class="flex justify-between py-5">
             <div @click="$router.push('/')" class="cursor-pointer">
-                <h1 class="text-3xl font-bold">Acceuil</h1>
+                <h1 class="text-3xl font-bold">Accueil</h1>
             </div>
         </div>
         <div v-if="animeChunks" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-10">

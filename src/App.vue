@@ -28,6 +28,8 @@ export default {
     },
 
     async mounted() {
+        // set title of the page
+        document.title = "JapanWatch";
         await this.loadAnimesAndCheckCors();
         if(!this.isNoCorsInstalled) return;        
         const result = await getRedirectResult(auth);

@@ -40,8 +40,10 @@ export default {
         if (this.language != "vf" && this.language != "vostfr") return this.$router.push("/");
         let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
         const setVideoPlayer = async (anime: Anime) =>{
-        
-        if (!anime){
+            document.title = "Episode " + this.currentEpisode + " - " + anime.title;
+
+        if (!anime){        
+
             // check if the route before was the history page or the home page
             if (this.$router.currentRoute.value.meta.from == "history"){
                 this.$router.push("/history");
