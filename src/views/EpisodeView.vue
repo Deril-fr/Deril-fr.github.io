@@ -75,10 +75,6 @@ export default {
             key: 'videoPlayer'
         },
         autoplay: true,
-        ads:{
-            enabled: true,
-            tagUrl: "https://www.videosprofitnetwork.com/watch.xml?key=10d4e51c8317bddf7b44f0ccc6771454"
-        }
        });
        this.title = anime.title;
        (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
