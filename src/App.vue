@@ -3,9 +3,8 @@ import AnimeCardComponent from './components/AnimeCardComponent.vue';
 import SpinnerComponent from './components/SpinnerComponent.vue';
 import HomeSkeleton from "./components/HomeSkeleton.vue";
 import { animesStore } from './stores/animeStore';
-import { ref } from 'vue';
 import { auth } from './utils/database';
-import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import {getRedirectResult } from "firebase/auth";
 </script>
 
 <script lang="ts">
@@ -24,7 +23,7 @@ export default {
             } catch (e) {
                 this.isNoCorsInstalled = false;
             }
-        },
+        }
     },
 
     async mounted() {
@@ -38,12 +37,6 @@ export default {
             const user = result.user;
             console.log(user);
         }
-        if(!auth.currentUser){
-            const provider = new GoogleAuthProvider();
-            // display a message to the user to sign in with google
-            await signInWithRedirect(auth, provider);
-        }
-
         let animesVf = animesStore.vf.map((anime) => {
             anime.lang = "vf";
             return anime;
