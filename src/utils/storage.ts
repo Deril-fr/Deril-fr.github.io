@@ -49,11 +49,7 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
         if (user) {
             const docRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(docRef);
-            if (docSnap) {
-                setDoc(docRef, {
-                    animeList: localStorage.getItem("animeList")
-                });
-            }
+
             if (docSnap) {
                 const data = docSnap.data();
                 if (data) {
@@ -66,7 +62,7 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                 changed = true;
                             } else {
                                 for (let i = 0; i < data.animeList.length; i++) {
-                                    const anime = data.animeList[i];
+                                    const anime = data.animeList[i] as AnimeWatched;
                                     const animeWatched = animesWatched.find((a) => a.id === anime.id && a.lang === anime.lang);
                                     if (animeWatched) {
                                         if (animeWatched.episode !== anime.episode || animeWatched.time !== anime.time) {
@@ -81,12 +77,19 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                     animeList: animesWatched
                                 });
                             }
-                        } else {
-                            tempData = data.animeList ? data.animeList as AnimeWatched : [] as unknown as AnimeWatched;
-                        }
+                        } 
 
+                    }else {
+                            tempData = data.animeList ? data.animeList as AnimeWatched : [] as unknown as AnimeWatched;
+                            localStorage.setItem("animeList", JSON.stringify(tempData));
                     }
 
+                }else {
+                    if (animeList) {
+                        setDoc(docRef, {
+                            animeList: JSON.parse(animeList)
+                        });
+                    }
                 }
             }
         }
