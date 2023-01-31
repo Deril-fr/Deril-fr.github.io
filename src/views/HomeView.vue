@@ -56,7 +56,7 @@ async function logout() {
                 <h1 class="text-3xl font-bold">Historique</h1>
             </div>
             
-            <div class="flex gap-5" v-if="auth.currentUser">
+            <div class="flex gap-5" v-if="auth.currentUser == null">
                 <button @click="login">Login</button>
             </div>  
             <div class="flex gap-5" v-else>
