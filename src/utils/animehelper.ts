@@ -1,5 +1,7 @@
 import type Anime from "@/types/Anime";
-import type { PstreamData, EpisodeReal, LastEpisodes } from "@/types/Anime";
+import type PstreamData from "@/types/PstreamData";
+import type EpisodeReal from "@/types/EpisodeReal";
+import type LastEpisodes from "@/types/LastEpisodes";
 import { load } from "cheerio";
 
 export default async function getM3U8(episodeUrl: string) {

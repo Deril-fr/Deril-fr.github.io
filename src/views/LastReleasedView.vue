@@ -2,7 +2,7 @@
 import LatestCardComponent from '@/components/LatestCardComponent.vue';
 import SearchBarComponent from '@/components/SearchBarComponent.vue';
 import { animesStore } from '@/stores/animeStore';
-import type { LastEpisodes } from '@/types/Anime';
+import type LastEpisodes from '@/types/LastEpisodes';
 import type Anime from '@/types/Anime';
 import { getLastViewed } from '@/utils/animehelper';
 import { ref } from 'vue';

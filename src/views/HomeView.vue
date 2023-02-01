@@ -6,7 +6,7 @@ import type Anime from '@/types/Anime';
 import chunkify from '@/utils/chunkify';
 import { auth } from '@/utils/database';
 import { GoogleAuthProvider, signInWithRedirect, signOut } from '@firebase/auth';
-import { onBeforeMount, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 let animeChunks = ref<Anime[][]>(chunkify(animesStore.result, 30));
 let page = ref(0);
