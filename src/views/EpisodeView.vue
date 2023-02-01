@@ -26,19 +26,22 @@ export default {
                 baseurl: string;
             }>,
             title: '',
-            lastUpdate: Date.now(),
+            lastTime: 0,
         };
     },
     methods: {
         update: function (e: any) {
-            if ((Date.now() - this.lastUpdate) < 10000) return;
-            this.lastUpdate = Date.now();
+            // check if the time is more than 10 seconds from the last time  (to prevent spamming the api)
+           const time = (this.$refs.player as HTMLMediaElement).currentTime
+            if (Math.abs(time - this.lastTime) >= 10000) {
             setAnime({
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
-                time: (this.$refs.player as HTMLMediaElement).currentTime,
+                time: time,
                 lang: this.language,
             });
+            }
+            this.lastTime = time;
         },
     },
     async mounted() {
