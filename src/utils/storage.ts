@@ -1,11 +1,11 @@
 import type { AnimeWatched } from "@/types/Anime";
 import { removeDuplicates } from "./removeDuplicates";
-import { db, auth } from "./database";
-import { doc, setDoc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { auth, database } from "./database";
+import { set, ref, get, update, child } from "firebase/database";
 
 export async function setAnime(episode: AnimeWatched) {
     // if animeList is null, create a new array
-    let currentEpisodes: AnimeWatched[] = await getAnimeList(false);
+    let currentEpisodes: AnimeWatched[] = await getAnimeList();
     // if animeListArray contains anime, return
     if (currentEpisodes.find((e) => e.id === episode.id && e.lang === episode.lang)) {
         currentEpisodes = currentEpisodes.filter((e) => e.id !== episode.id || e.lang !== episode.lang);
@@ -48,11 +48,10 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
     if (remote) {
         const user = auth.currentUser;
         if (user) {
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap) {
-                const data = docSnap.data();
+            const childRef = child(ref(database), `users/${user.uid}`);
+            get(childRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                const data = snapshot.val();
                 if (data) {
                     // check if at least one anime is in the list as changed from the remote one
                     if (animeList) {
@@ -79,14 +78,14 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                                         localStorage.setItem("animeList", JSON.stringify(data.animeList));
                                         animeList = JSON.stringify(data.animeList);
                                     } else {
-                                        await updateDoc(docRef, {
+                                     update(childRef, {
                                             animeList: JSON.parse(animeList),
                                             updatedAt: Date.now(),
                                         });
                                         localStorage.setItem("lastUpdated", String(Date.now()));
                                     }
                                 } else {
-                                    await updateDoc(docRef, {
+                                    update(childRef, {
                                         animeList: JSON.parse(animeList),
                                         updatedAt: Date.now(),
                                     });
@@ -100,15 +99,16 @@ export async function getAnimeList(remote: boolean = true): Promise<AnimeWatched
                             localStorage.setItem("animeList", JSON.stringify(tempData));
                     }
 
-                }else {
-                    if (animeList) {
-                        setDoc(docRef, {
-                            animeList: JSON.parse(animeList),
-                            updatedAt: Date.now(),
-                        });
-                    }
+                }
+            }else {
+                if (animeList) {
+                    set(childRef, {
+                        animeList: JSON.parse(animeList),
+                        updatedAt: Date.now(),
+                    });
                 }
             }
+        });
         }
     }
         // if animeList is null, return undefined
