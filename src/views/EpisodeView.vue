@@ -31,17 +31,12 @@ export default {
     },
     methods: {
         update: function (e: any) {
-            // check if the time is more than 10 seconds from the last time  (to prevent spamming the api)
-           const time = (this.$refs.player as HTMLMediaElement).currentTime
-            if (Math.abs(time - this.lastTime) >= 10000) {
             setAnime({
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
-                time: time,
+                time: (this.$refs.player as HTMLMediaElement).currentTime,
                 lang: this.language,
             });
-            }
-            this.lastTime = time;
         },
     },
     async mounted() {
