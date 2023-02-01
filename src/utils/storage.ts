@@ -39,8 +39,10 @@ export async function getAnimeList(): Promise<AnimeWatched[]> {
     let tempData: AnimeWatched[] = [];
     const user = auth.currentUser;
     if (user) {
+        console.log("user is logged in");
         const childRef = child(ref(database), `users/${user.uid}`);
         get(childRef).then((snapshot) => {
+            console.log(snapshot.val());
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 tempData = Object.values(data.animeList);
@@ -54,6 +56,8 @@ export async function getAnimeList(): Promise<AnimeWatched[]> {
                 });
             }
         });
+    }else{
+        console.log("user is not logged in");
     }
     // if animeList is null, return undefined
     const animeListArray = watchListStore.length > 0 ? watchListStore : tempData;
