@@ -25,11 +25,14 @@ export default {
                 available: boolean;
                 baseurl: string;
             }>,
-            title: ''
+            title: '',
+            lastUpdate: Date.now(),
         };
     },
     methods: {
         update: function (e: any) {
+            if ((Date.now() - this.lastUpdate) < 10000) return;
+            this.lastUpdate = Date.now();
             setAnime({
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
@@ -95,6 +98,12 @@ export default {
                     if (player && player.paused) {
                         player.play();
                     }
+                    setAnime({
+                        id: parseInt(this.animeId.toString()),
+                        episode: parseInt(this.currentEpisode.toString()),
+                        time: player.currentTime,
+                        lang: this.language,
+                    });
                 }, 1000);
                 let isEnded = false;
                 player.onended = async () => {
