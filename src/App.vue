@@ -4,7 +4,7 @@ import SpinnerComponent from './components/SpinnerComponent.vue';
 import HomeSkeleton from "./components/HomeSkeleton.vue";
 import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
-import {getRedirectResult } from "firebase/auth";
+import {getRedirectResult, onAuthStateChanged } from "firebase/auth";
 import { getAnimeList } from './utils/storage';
 </script>
 
@@ -26,11 +26,6 @@ export default {
             }
         } 
     },
-    created(){
-        setTimeout(async() => {
-            await getAnimeList();
-        }, 1000);
-    },
     async mounted() {
         // set title of the page
         document.title = "JapanWatch";
@@ -40,7 +35,7 @@ export default {
         if (result && result.user) {
             // User is signed in.
             const user = result.user;
-            console.log(user);
+            await getAnimeList();
         }
         let animesVf = animesStore.vf.map((anime) => {
             anime.lang = "vf";
