@@ -9,11 +9,8 @@ import './assets/main.css'
 import { getAnimeList } from './utils/storage'
 
 const app = createApp(App)
-document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'hidden') {
-        const animeList = await getAnimeList();
-    }
-})
+
+getAnimeList();
 
 app.use(router)
 app.use(VueLazyLoad)
