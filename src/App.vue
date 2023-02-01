@@ -26,8 +26,10 @@ export default {
             }
         } 
     },
-    async created(){
-        await getAnimeList();
+    created(){
+        setTimeout(async() => {
+            await getAnimeList();
+        }, 1000);
     },
     async mounted() {
         // set title of the page
