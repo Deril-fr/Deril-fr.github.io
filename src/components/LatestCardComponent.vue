@@ -1,6 +1,6 @@
 <script lang="ts">
 import type Anime from '@/types/Anime';
-import type { LastEpisodes } from '@/types/Anime';
+import type LastEpisodes from '@/types/LastEpisodes';
 import { convertEpisodeToNumber } from '@/utils/animehelper';
 import getTimeAgo from '@/utils/timer';
 import type { PropType } from 'vue';

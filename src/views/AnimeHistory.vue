@@ -1,30 +1,29 @@
 <script setup lang="ts">
 import AnimeViewedComponent from '@/components/AnimeViewedComponent.vue';
 import { animesStore } from '@/stores/animeStore';
-import type { AnimeWatched } from '@/types/Anime';
+import type AnimeWatched from '@/types/AnimeWatched';
 import type Anime from '@/types/Anime';
 import { getLastViewed, convertEpisodeToNumber } from '@/utils/animehelper';
 import { getAnimeList } from '@/utils/storage';
 import { ref } from 'vue';
+import { watchListStore } from '@/stores/watchListStore';
 
 let animeChunks = ref<{
     animes: Anime;
     lastEpisodes: AnimeWatched;
     asNew: boolean;
 }[]>();
-getAnimeList().then((animeList) => {
     getLastViewed().then((lastEpisodes) => {
-        let animes = animesStore.all.filter((anime) => animeList.find((lastEpisode) => lastEpisode.id === anime.id && lastEpisode.lang === anime.lang));
+        let animes = animesStore.all.filter((anime) => watchListStore.find((lastEpisode) => lastEpisode.id === anime.id && lastEpisode.lang === anime.lang));
         animeChunks.value = animes.map((anime) => {
             let lastStreamed = lastEpisodes.find((lastEpisode) => lastEpisode.anime_url === anime.url);
             return {
                 animes: anime,
-                lastEpisodes: animeList.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched,
-                asNew: lastStreamed ? (animeList.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched).episode < convertEpisodeToNumber(lastStreamed.episode) : false,
+                lastEpisodes: watchListStore.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched,
+                asNew: lastStreamed ? (watchListStore.find((lastEpisode) => lastEpisode.id === anime.id) as AnimeWatched).episode < convertEpisodeToNumber(lastStreamed.episode) : false,
             };
         });
     });
-});
 </script>
 
 <template>

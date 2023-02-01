@@ -1,7 +1,7 @@
 <script lang="ts">
 import { animesStore } from '@/stores/animeStore';
 import type Anime from '@/types/Anime';
-import type { EpisodeReal } from '@/types/Anime';
+import type EpisodeReal from '@/types/EpisodeReal';
 import { getSynopsisAndEpisodes } from '@/utils/animehelper';
 
 export default {

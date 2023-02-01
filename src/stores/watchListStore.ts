@@ -1,9 +1,9 @@
 import { reactive, watch } from 'vue';
-import type { AnimeWatched } from '../types/Anime';
+import type AnimeWatched from '../types/AnimeWatched';
 
-export const watchListStore: AnimeWatched[] = reactive(JSON.parse(localStorage.getItem('jw_watchlist') || '[]') as AnimeWatched[]);
+export const watchListStore: AnimeWatched[] = reactive(JSON.parse(localStorage.getItem('animeList') || '[]') as AnimeWatched[]);
 
 watch(watchListStore, () => {
     console.log(watchListStore);
-    localStorage.setItem('jw_watchlist', JSON.stringify(watchListStore));
+    localStorage.setItem('animeList', JSON.stringify(watchListStore));
 });
