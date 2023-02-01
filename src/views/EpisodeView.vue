@@ -38,122 +38,131 @@ export default {
     async mounted() {
         if (this.language != "vf" && this.language != "vostfr") return this.$router.push("/");
         let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
-        const setVideoPlayer = async (anime: Anime) =>{
+        const setVideoPlayer = async (anime: Anime) => {
             document.title = "Episode " + this.currentEpisode + " - " + anime.title;
 
-        if (!anime){        
+            if (!anime) {
 
-            // check if the route before was the history page or the home page
-            this.$router.back();
-            return;
-        }
+                // check if the route before was the history page or the home page
+                this.$router.back();
+                return;
+            }
 
-        let data = await getSynopsisAndEpisodes(anime.url);
-        let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
-        
-        if (!episode){
-            setAnime({
-                    id:parseInt(this.animeId.toString()),
-                    episode:parseInt(this.currentEpisode.toString()) - 1,
+            let data = await getSynopsisAndEpisodes(anime.url);
+            let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
+
+            if (!episode) {
+                setAnime({
+                    id: parseInt(this.animeId.toString()),
+                    episode: parseInt(this.currentEpisode.toString()) - 1,
                     time: 0,
                     lang: this.language,
                 });
-            this.$router.back();
-            return;
-        }
-
-        let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
-        if (!m3u8) return this.$router.back();
-
-        this.video = {
-            mp4: false,
-            uri: m3u8.uri,
-            available: true,
-            baseurl: m3u8.baseurl,
-        };
-        // check if anime is already in the storage
-       const animeWatched = getAnime(parseInt(this.animeId.toString()), parseInt(this.currentEpisode.toString()), this.language)
-    // dynamic import plyr
-    const { default: Plyr } = await import('plyr');
-       const player = new Plyr('#playme',{
-        storage: {
-            enabled: true,
-            key: 'videoPlayer'
-        },
-        autoplay: true,
-       });
-       this.title = anime.title;
-       (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
-       
-       window.addEventListener("resize", () => {
-        (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
-            });
-
-
-        document.addEventListener("keypress", (event) => {
-            // if user press spacebar then pause or play the video
-            switch (event.code) {
-                case "Space":
-                    if (player.paused) {
-                        player.play();
-                    } else {
-                        player.pause();
-                    }
-                    break;
-                case "KeyF":
-                    player.fullscreen.toggle();
-                    break;
-                case "KeyM":
-                    player.muted = !player.muted;
-                    break;
+                this.$router.back();
+                return;
             }
 
-        });
-        if (this.video && this.video.available) {
-            let hlsPlayer = new hls();
+            let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
+            if (!m3u8) return this.$router.back();
 
-            hlsPlayer.loadSource(this.video.uri);
-            hlsPlayer.attachMedia(this.$refs.player as HTMLMediaElement);
-            setTimeout(() => {
-                if (animeWatched) {
-                    (this.$refs.player as HTMLMediaElement).currentTime = animeWatched.time;
-                }else{
-                    (this.$refs.player as HTMLMediaElement).currentTime = 0;
-                    (this.$refs.player as HTMLMediaElement).play();
+            this.video = {
+                mp4: false,
+                uri: m3u8.uri,
+                available: true,
+                baseurl: m3u8.baseurl,
+            };
+            // check if anime is already in the storage
+            const animeWatched = getAnime(parseInt(this.animeId.toString()), parseInt(this.currentEpisode.toString()), this.language)
+            // dynamic import plyr
+            const { default: Plyr } = await import('plyr');
+            const player = new Plyr('#playme', {
+                storage: {
+                    enabled: true,
+                    key: 'videoPlayer'
+                },
+                autoplay: true,
+            });
+            this.title = anime.title;
+            (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
+
+            window.addEventListener("resize", () => {
+                (this.$refs.player as HTMLMediaElement).style.aspectRatio = `${this.innerWidth}/${this.innerHeight}`;
+            });
+
+
+            document.addEventListener("keypress", (event) => {
+                // if user press spacebar then pause or play the video
+                switch (event.code) {
+                    case "Space":
+                        if (player.paused) {
+                            player.play();
+                        } else {
+                            player.pause();
+                        }
+                        break;
+                    case "KeyF":
+                        player.fullscreen.toggle();
+                        break;
+                    case "KeyM":
+                        player.muted = !player.muted;
+                        break;
                 }
-                if (this.$refs.player as HTMLMediaElement && (this.$refs.player as HTMLMediaElement).paused) {
-                    (this.$refs.player as HTMLMediaElement).play();
-                }
-            }, 1000);
-            // setup a listener when the video time is updated 
-            (this.$refs.player as HTMLMediaElement).addEventListener('timeupdate', () => {
-                setAnime({
-                    id:parseInt(this.animeId.toString()),
-                    episode:parseInt(this.currentEpisode.toString()),
-                    time: (this.$refs.player as HTMLMediaElement).currentTime,
-                    lang: this.language,
+
+            });
+            if (this.video && this.video.available) {
+                let hlsPlayer = new hls();
+
+                hlsPlayer.loadSource(this.video.uri);
+                hlsPlayer.attachMedia(this.$refs.player as HTMLMediaElement);
+                setTimeout(() => {
+                    if (animeWatched) {
+                        (this.$refs.player as HTMLMediaElement).currentTime = animeWatched.time;
+                    } else {
+                        (this.$refs.player as HTMLMediaElement).currentTime = 0;
+                        (this.$refs.player as HTMLMediaElement).play();
+                    }
+                    if (this.$refs.player as HTMLMediaElement && (this.$refs.player as HTMLMediaElement).paused) {
+                        (this.$refs.player as HTMLMediaElement).play();
+                    }
+                }, 1000);
+                // setup a listener when the video time is updated 
+                player.on('timeupdate', () => {
+                    setAnime({
+                        id: parseInt(this.animeId.toString()),
+                        episode: parseInt(this.currentEpisode.toString()),
+                        time: (this.$refs.player as HTMLMediaElement).currentTime,
+                        lang: this.language,
+                    });
                 });
-            });
-            (this.$refs.player as HTMLMediaElement).addEventListener('ended', async () => {
-                (this.$refs.player as HTMLMediaElement).currentTime = 0;
-                this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
-                this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
-                // check if the next episode exist in the anime data 
-                let episodeNumber = parseInt(anime.nb_eps.replace(" Eps", ""));
-                if(!isNaN(episodeNumber)){
-                    if(episodeNumber < parseInt(this.currentEpisode.toString())){
-                        removeAnime(parseInt(this.animeId.toString()), this.language);
-                        return this.$router.back();
+                player.on('ended', async () => {
+                    // check if user is focused on the player with the cursor
+                    // if yes return  and don't play the next episode
+                    if (document.activeElement == this.$refs.player) {
+                        return;
                     }
-                }else{
-                    if(anime.type == "m0v1e"){
-                        removeAnime(parseInt(this.animeId.toString()), this.language);
-                        return this.$router.back();
+                    (this.$refs.player as HTMLMediaElement).currentTime = 0;
+                    this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
+                    this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
+                    // check if the next episode exist in the anime data 
+                    let nb_eps = parseInt(anime.nb_eps.replace(" Eps", ""));
+                    let currentEpisode = parseInt(this.currentEpisode.toString());
+                    let animeId = parseInt(this.animeId.toString());
+
+                    if (!isNaN(nb_eps) && anime.type == "m0v1e") {
+                        removeAnime(animeId, this.language);
+                        this.$router.back();
+                        return;
                     }
-                }
-                await setVideoPlayer(anime);
-            });
-        }
+
+                    if (nb_eps < currentEpisode) {
+                        removeAnime(animeId, this.language);
+                        this.$router.back();
+                        return
+                    }
+
+                    await setVideoPlayer(anime);
+                });
+            }
         }
         await setVideoPlayer(animeExist as Anime);
     },
