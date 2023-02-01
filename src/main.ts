@@ -10,8 +10,6 @@ import { getAnimeList } from './utils/storage'
 
 const app = createApp(App)
 
-getAnimeList();
-
 app.use(router)
 app.use(VueLazyLoad)
 app.use(VuePlyr)

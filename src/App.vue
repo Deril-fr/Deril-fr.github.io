@@ -5,6 +5,7 @@ import HomeSkeleton from "./components/HomeSkeleton.vue";
 import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
 import {getRedirectResult } from "firebase/auth";
+import { getAnimeList } from './utils/storage';
 </script>
 
 <script lang="ts">
@@ -23,9 +24,11 @@ export default {
             } catch (e) {
                 this.isNoCorsInstalled = false;
             }
-        }
+        } 
     },
-
+    async created(){
+        await getAnimeList();
+    },
     async mounted() {
         // set title of the page
         document.title = "JapanWatch";
