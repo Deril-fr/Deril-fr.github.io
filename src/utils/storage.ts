@@ -28,15 +28,15 @@ export function getAnime(id: number, episode: number, lang: string): AnimeWatche
     return animeListArray.find((a: AnimeWatched) => a.id === id && a.episode === episode && a.lang === lang);
 }
 
-export function removeAnime(id: number) {
-    // get Anime from localStorage 
+export function removeAnime(id: number, lang: string) {
+    // get Anime from localStorage
     const animeList = localStorage.getItem("animeList");
-    // if animeList is null, return undefined
+    // if animeList is null, return undefined   
     const animeListArray: AnimeWatched[] = animeList ? JSON.parse(animeList) : [];
     // remove anime if found
-    animeListArray.splice(animeListArray.findIndex((a: AnimeWatched) => a.id === id), 1);
-    // set animeListArray to localStorage
-    localStorage.setItem("animeList", JSON.stringify(animeListArray));
+    const newAnimeList = animeListArray.filter((a: AnimeWatched) => a.id !== id || a.lang !== lang);
+    localStorage.setItem("lastUpdated", String(Date.now()));
+    localStorage.setItem("animeList", JSON.stringify(newAnimeList));
 }
 
 

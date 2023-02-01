@@ -3,7 +3,7 @@ import { animesStore } from '@/stores/animeStore';
 import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
-import { getAnime, setAnime } from '@/utils/storage';
+import { getAnime, removeAnime, setAnime } from '@/utils/storage';
 import type Anime from '@/types/Anime';
 
 
@@ -138,6 +138,19 @@ export default {
                 (this.$refs.player as HTMLMediaElement).currentTime = 0;
                 this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
                 this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
+                // check if the next episode exist in the anime data 
+                let episodeNumber = parseInt(anime.nb_eps.replace(" Eps", ""));
+                if(!isNaN(episodeNumber)){
+                    if(episodeNumber < parseInt(this.currentEpisode.toString())){
+                        removeAnime(parseInt(this.animeId.toString()), this.language);
+                        return this.$router.back();
+                    }
+                }else{
+                    if(anime.type == "m0v1e"){
+                        removeAnime(parseInt(this.animeId.toString()), this.language);
+                        return this.$router.back();
+                    }
+                }
                 await setVideoPlayer(anime);
             });
         }
