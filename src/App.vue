@@ -37,6 +37,12 @@ export default {
             const user = result.user;
             await getAnimeList();
         }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                await getAnimeList();
+            }
+        });
         let animesVf = animesStore.vf.map((anime) => {
             anime.lang = "vf";
             return anime;
