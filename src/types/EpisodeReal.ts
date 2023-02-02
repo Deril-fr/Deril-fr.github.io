@@ -1,4 +1,4 @@
-export interface EpisodeReal {
+export default interface EpisodeReal {
     episode: number;
     time: string;
     title: string;
