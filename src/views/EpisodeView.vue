@@ -34,6 +34,7 @@ export default {
                 episode: parseInt(this.currentEpisode.toString()),
                 time: (this.$refs.player as HTMLMediaElement).currentTime,
                 lang: this.language,
+                duration: (this.$refs.player as HTMLMediaElement).duration,
             });
         },
     },
