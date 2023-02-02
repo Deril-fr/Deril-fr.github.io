@@ -4,6 +4,8 @@ import getM3U8, { getSynopsisAndEpisodes } from '@/utils/animehelper';
 import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
 import { getAnime, removeAnime, setAnime } from '@/utils/storage';
+
+import type EpisodeReal from '@/types/EpisodeReal';
 import type Anime from '@/types/Anime';
 export default {
     data() {
@@ -11,6 +13,7 @@ export default {
             currentEpisode: this.$router.currentRoute.value.params.episode.toString(),
             language: this.$router.currentRoute.value.params.lang as string,
             animeId: this.$router.currentRoute.value.params.id,
+            anime: undefined as { synopsis: string; episodes: EpisodeReal[]; coverURL: string } | undefined,
             options: {
                 storage: {
                     enabled: true,
@@ -29,6 +32,7 @@ export default {
     },
     methods: {
         update: function (e: any) {
+            if (this.anime && this.anime.episodes.length < parseInt(this.currentEpisode)) return;
             setAnime({
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
@@ -41,6 +45,7 @@ export default {
     async mounted() {
         if (this.language != 'vf' && this.language != 'vostfr') return this.$router.push('/');
         let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
+
         const setVideoPlayer = async (anime: Anime) => {
             document.title = 'Episode ' + this.currentEpisode + ' - ' + anime.title;
             const player = this.$refs.player as HTMLMediaElement;
@@ -50,8 +55,8 @@ export default {
                 this.$router.back();
                 return;
             }
-            let data = await getSynopsisAndEpisodes(anime.url);
-            let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
+            this.anime = await getSynopsisAndEpisodes(anime.url);
+            let episode = this.anime.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
             if (!episode) {
                 setAnime({
                     id: parseInt(this.animeId.toString()),
