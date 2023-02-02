@@ -1,7 +1,7 @@
 import type AnimeWatched from "@/types/AnimeWatched";
 import { removeDuplicates } from "./removeDuplicates";
 import { auth, database } from "./database";
-import { set, ref, get, update, child } from "firebase/database";
+import { set, ref, get, update, child, remove } from "firebase/database";
 import { watchListStore } from "@/stores/watchListStore";
 
 export async function setAnime(episode: AnimeWatched) {
@@ -31,6 +31,11 @@ export function getAnime(id: number, episode: number, lang: string): AnimeWatche
 
 export function removeAnime(id: number, lang: string) {
     watchListStore.splice(watchListStore.indexOf(watchListStore.find((a: AnimeWatched) => a.id === id && a.lang === lang) as AnimeWatched));
+    const user = auth.currentUser;
+    if (user) {
+        const childRef = child(ref(database), `users/${user.uid}/animeList/${id}`);
+        remove(childRef);
+    }
 }
 
 
