@@ -6,6 +6,7 @@ import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { getAnimeList } from './utils/storage';
+import chunkify from './utils/chunkify';
 </script>
 
 <script lang="ts">
@@ -52,7 +53,7 @@ export default {
             return anime;
         });
         animesStore.all = [...animesVf, ...animesVostfr];
-        animesStore.result = [...animesStore.all];
+        animesStore.result = chunkify(animesStore.all, 30);
         // handle if user leave the page or close the tab
     },
     components: { SpinnerComponent, AnimeCardComponent, HomeSkeleton },

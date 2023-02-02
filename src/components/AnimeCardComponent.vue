@@ -12,8 +12,10 @@ export default {
 
 <template>
     <div class="w-full" @click="$router.push('/anime/' + anime?.lang + '/' + anime?.id)">
-        <p v-if="anime?.lang == 'vf'" class="bg-red-500 p-3 rounded absolute">VF</p>
-        <img class="w-full rounded-lg object-cover aspect-[9/13]" v-lazy="{ src: anime?.url_image, loading: '/default_thumbnail.png' }" alt="" />
+        <div class="w-full relative">
+            <img v-if="anime?.lang == 'vf'" src="/flag_france.png" class="w-5 absolute top-3 left-3" alt="" />
+            <img class="w-full rounded-t-lg object-cover aspect-[9/13]" v-lazy="{ src: anime?.url_image, loading: '/default_thumbnail.png' }" alt="" />
+        </div>
 
         <div class="mt-5 grid">
             <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ anime?.title }}</h5>

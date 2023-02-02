@@ -32,15 +32,15 @@ import { watchListStore } from '@/stores/watchListStore';
 <template>
     <section class="px-20 mt-10">
         <p class="flex justify-between w-full">
-            <h2 class="font-semibold text-xl">Reprendre</h2>
-            <router-link v-if="watchListStore.length > 8" to="/history">Tout voir</router-link>
+            <h2 class="text-xl uppercase">Continuer de regarder <span class="font-bold">{{ watchListStore.length }} animes</span></h2>
+            <router-link v-if="watchListStore.length > 8" to="/history" class="uppercase">Tout voir</router-link>
         </p>
 
         <div class="grid md:grid-cols-4 xl:grid-cols-8 gap-5 mt-5" id="resumeHomePage">
-            <div v-for="anime in watchList" class="transition delay-100" :class="hovered ? (anime.anime.id + anime.anime.lang) == hovered ? 'opacity-100' : 'opacity-50' : 'opacity-100'" :key="anime.anime.id" @mouseenter="test(anime.anime.id, anime.anime.lang)" @mouseleave="test(undefined, undefined)" @click="$router.push('/anime/' + anime?.anime.lang + '/' + anime?.anime.id)">
-                <p v-if="anime?.anime.lang == 'vf'" class="bg-red-500 p-3 rounded absolute z-10">VF</p>
-
+            <div v-for="anime in watchList" class="transition delay-100" :class="hovered ? (anime.anime.id + anime.anime.lang) == hovered ? 'opacity-100' : 'opacity-50' : 'opacity-100'" :key="anime.anime.id" @mouseenter="test(anime.anime.id, anime.anime.lang)" @mouseleave="test(undefined, undefined)" @click="$router.push('/anime/' + anime?.anime.lang + '/' + anime?.anime.id + '/episode/' + anime.details.episode)">
                 <div class="w-fit relative">
+                    <img v-if="anime.details.lang == 'vf'" src="/flag_france.png" class="w-5 absolute top-3 left-3" alt=""> 
+
                     <img class="w-full rounded-t-lg object-cover aspect-[9/13]" v-lazy="{ src: anime?.anime.url_image, loading: '/default_thumbnail.png' }" alt="" />
                     <div class="absolute w-full bg-zinc-800 h-1.5 bottom-0">
                         <div style="transition: all 1s;" :style="'width: ' + (hovered ? ((anime.anime.id + anime.anime.lang) == hovered) ? `${(anime.details.time/anime.details.duration)*100}%` : `0%` : `0%`)" class="bg-rose-500 h-1.5"></div>
@@ -48,8 +48,8 @@ import { watchListStore } from '@/stores/watchListStore';
                 </div>
 
                 <div class="mt-5 grid">
-                    <h5 class="text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ anime?.anime.title }}</h5>
-                    <h6>{{ anime?.anime.start_date_year }} - {{ anime?.anime.nb_eps }}</h6>
+                    <h5 class="flex gap-2 text-lg font-bold whitespace-nowrap text-ellipsis overflow-hidden">{{ anime?.anime.title }}</h5>
+                    <h6>Episode {{ anime.details.episode }}</h6>
                 </div>
             </div>
         

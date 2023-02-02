@@ -5,7 +5,6 @@ import { ref, type Ref } from 'vue';
 import hls from 'hls.js';
 import { getAnime, removeAnime, setAnime } from '@/utils/storage';
 import type Anime from '@/types/Anime';
-
 export default {
     data() {
         return {
@@ -30,12 +29,10 @@ export default {
     },
     methods: {
         update: function (e: any) {
-            if (this.language !== 'vf' && this.language !== 'vostfr') return this.$router.replace('/');
             setAnime({
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
                 time: (this.$refs.player as HTMLMediaElement).currentTime,
-                duration: (this.$refs.player as HTMLMediaElement).duration,
                 lang: this.language,
             });
         },
@@ -52,25 +49,20 @@ export default {
                 this.$router.back();
                 return;
             }
-
             let data = await getSynopsisAndEpisodes(anime.url);
             let episode = data.episodes.find((episode) => episode.episode.toString() == this.currentEpisode);
-
             if (!episode) {
                 setAnime({
                     id: parseInt(this.animeId.toString()),
                     episode: parseInt(this.currentEpisode.toString()) - 1,
                     time: 0,
-                    duration: (this.$refs.player as HTMLMediaElement).duration,
-                    lang: this.language as 'vf' | 'vostfr',
+                    lang: this.language,
                 });
                 this.$router.back();
                 return;
             }
-
             let m3u8 = await getM3U8('https://neko-sama.fr' + episode.url);
             if (!m3u8) return this.$router.back();
-
             this.video = {
                 mp4: false,
                 uri: m3u8.uri,
@@ -84,7 +76,6 @@ export default {
 
             if (this.video && this.video.available) {
                 let hlsPlayer = new hls();
-
                 hlsPlayer.loadSource(this.video.uri);
                 hlsPlayer.attachMedia(player);
                 setTimeout(() => {
@@ -101,8 +92,7 @@ export default {
                         id: parseInt(this.animeId.toString()),
                         episode: parseInt(this.currentEpisode.toString()),
                         time: player.currentTime,
-                        duration: (this.$refs.player as HTMLMediaElement).duration,
-                        lang: this.language as 'vf' | 'vostfr',
+                        lang: this.language,
                     });
                 }, 1000);
                 let isEnded = false;
@@ -116,19 +106,16 @@ export default {
                     let nb_eps = parseInt(anime.nb_eps.replace(' Eps', ''));
                     let currentEpisode = parseInt(this.currentEpisode.toString());
                     let animeId = parseInt(this.animeId.toString());
-
                     if (!isNaN(nb_eps) && anime.type == 'm0v1e') {
                         removeAnime(animeId, this.language);
                         this.$router.back();
                         return;
                     }
-
                     if (nb_eps < currentEpisode) {
                         removeAnime(animeId, this.language);
                         this.$router.back();
                         return;
                     }
-
                     await setVideoPlayer(anime);
                 };
             }
