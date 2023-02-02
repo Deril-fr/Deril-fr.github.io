@@ -1,4 +1,4 @@
-import EpisodeReal from '@/types/EpisodeReal';
+import type EpisodeReal from '@/types/EpisodeReal';
 
 export default interface AnimeDetails {
     synopsis: string;
