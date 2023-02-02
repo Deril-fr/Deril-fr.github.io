@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import AnimeCardComponent from './components/AnimeCardComponent.vue';
 import SpinnerComponent from './components/SpinnerComponent.vue';
-import HomeSkeleton from "./components/HomeSkeleton.vue";
+import HomeSkeleton from './components/HomeSkeleton.vue';
 import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
-import {getRedirectResult, onAuthStateChanged } from "firebase/auth";
+import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { getAnimeList } from './utils/storage';
 </script>
 
@@ -19,18 +19,18 @@ export default {
     methods: {
         loadAnimesAndCheckCors: async function () {
             try {
-                animesStore.vf = await (await fetch("https://neko-sama.fr/animes-search-vf.json")).json();
-                animesStore.vostfr = await (await fetch("https://neko-sama.fr/animes-search-vostfr.json")).json();
+                animesStore.vf = await (await fetch('https://neko-sama.fr/animes-search-vf.json')).json();
+                animesStore.vostfr = await (await fetch('https://neko-sama.fr/animes-search-vostfr.json')).json();
             } catch (e) {
                 this.isNoCorsInstalled = false;
             }
-        } 
+        },
     },
     async mounted() {
         // set title of the page
-        document.title = "JapanWatch";
+        document.title = 'JapanWatch';
         await this.loadAnimesAndCheckCors();
-        if(!this.isNoCorsInstalled) return;        
+        if (!this.isNoCorsInstalled) return;
         const result = await getRedirectResult(auth);
         if (result && result.user) {
             // User is signed in.
@@ -38,29 +38,27 @@ export default {
             await getAnimeList();
         }
         let animesVf = animesStore.vf.map((anime) => {
-            anime.lang = "vf";
+            anime.lang = 'vf';
             return anime;
         });
         let animesVostfr = animesStore.vostfr.map((anime) => {
-            anime.lang = "vostfr";
+            anime.lang = 'vostfr';
             return anime;
         });
         animesStore.all = [...animesVf, ...animesVostfr];
         animesStore.result = [...animesStore.all];
-        // handle if user leave the page or close the tab 
+        // handle if user leave the page or close the tab
     },
-    components: { SpinnerComponent, AnimeCardComponent, HomeSkeleton }
+    components: { SpinnerComponent, AnimeCardComponent, HomeSkeleton },
 };
 </script>
 
 <template>
-    <main class="bg-zinc-900 text-white min-h-screen">
-
-        <HomeSkeleton v-if="animesStore.all.length <= 0 && isNoCorsInstalled" />
-
+    <main class="text-white min-h-screen pb-20">
         <div v-if="isNoCorsInstalled && animesStore.all.length > 0">
             <RouterView />
         </div>
+
         <div v-else-if="!isNoCorsInstalled">
             <div class="flex flex-col items-center justify-center h-screen">
                 <h1 class="text-4xl font-bold">JapanWatch</h1>
