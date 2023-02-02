@@ -33,7 +33,7 @@ export default {
                 id: parseInt(this.animeId.toString()),
                 episode: parseInt(this.currentEpisode.toString()),
                 time: (this.$refs.player as HTMLMediaElement).currentTime,
-                lang: this.language,
+                lang: this.language as 'vf' | 'vostfr',
                 duration: (this.$refs.player as HTMLMediaElement).duration,
             });
         },
@@ -57,7 +57,8 @@ export default {
                     id: parseInt(this.animeId.toString()),
                     episode: parseInt(this.currentEpisode.toString()) - 1,
                     time: 0,
-                    lang: this.language,
+                    lang: this.language as 'vf' | 'vostfr',
+                    duration: (this.$refs.player as HTMLMediaElement).duration,
                 });
                 this.$router.back();
                 return;
@@ -93,7 +94,8 @@ export default {
                         id: parseInt(this.animeId.toString()),
                         episode: parseInt(this.currentEpisode.toString()),
                         time: player.currentTime,
-                        lang: this.language,
+                        lang: this.language as 'vf' | 'vostfr',
+                        duration: (this.$refs.player as HTMLMediaElement).duration,
                     });
                 }, 1000);
                 let isEnded = false;
