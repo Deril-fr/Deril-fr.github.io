@@ -60,7 +60,7 @@ export default {
 </script>
 
 <template>
-    <main class="text-white min-h-screen pb-20">
+    <main class="text-white min-h-screen">
         <div v-if="isNoCorsInstalled && animesStore.all.length > 0">
             <RouterView />
         </div>

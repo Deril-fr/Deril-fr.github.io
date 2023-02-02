@@ -10,6 +10,8 @@ import { watchListStore } from '@/stores/watchListStore';
 </script>
 
 <template>
-    <FavoriteAnimeComponent />
-    <ResumeHomePageComponent v-if="watchListStore.length > 0" />
+    <section class="pb-20">
+        <FavoriteAnimeComponent />
+        <ResumeHomePageComponent v-if="watchListStore.length > 0" />
+    </section>
 </template>
