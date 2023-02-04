@@ -58,6 +58,7 @@ export default {
         if (this.language != 'vf' && this.language != 'vostfr') return this.$router.push('/');
         let animeExist = animesStore[this.language].find((a) => a.id.toString() === this.animeId);
         const player = this.$refs.player as HTMLMediaElement;
+        if(animeExist){
         let PlayerContainer = document.querySelector('.plyr');
                     let ControlContainer = document.querySelector('.plyr__controls');
                     // add Button on the top right of the player to go to the Home page
@@ -67,7 +68,7 @@ export default {
                     // add the class for get the icon
                     homeButton.classList.add('plyr__control');
                     homeButton.classList.add('plyr__controls__item');
-                    homeButton.innerHTML = `<span class="material-symbols-outlined">home</span> ${anime.title}`;
+                    homeButton.innerHTML = `<span class="material-symbols-outlined">home</span> ${animeExist.title}`;
                     homeButton.style.position = 'absolute';
                     // set the position of the button on the top left of the player
                     homeButton.style.top = '0';
@@ -110,7 +111,7 @@ export default {
                     this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
                     this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
                     // check if the next episode exist in the anime data
-                    if(animeExist){
+                    if(!animeExist) return;
                     let nb_eps = parseInt(animeExist.nb_eps.replace(' Eps', ''));
                     let currentEpisode = parseInt(this.currentEpisode.toString());
                     let animeId = parseInt(this.animeId.toString());
@@ -126,8 +127,8 @@ export default {
                     }
                     await setVideoPlayer(animeExist);
                 }
-                    };
-                    ControlContainer?.appendChild(nextButton);
+                    ControlContainer?.appendChild(nextButton); 
+            };
         const setVideoPlayer = async (anime: Anime) => {
             document.title = 'Episode ' + this.currentEpisode + ' - ' + anime.title;
             const plyr = this.$refs.plyr as any;
