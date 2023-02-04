@@ -108,6 +108,7 @@ export default {
                         player.play();
                     }
                     let PlayerContainer = document.querySelector('.plyr');
+                    let ControlContainer = document.querySelector('.plyr__controls');
                     // add Button on the top right of the player to go to the Home page
                     let homeButton = document.createElement('button');
                     homeButton.classList.add('home-button');
@@ -132,6 +133,48 @@ export default {
                         this.$router.push('/');
                     };
                     PlayerContainer?.appendChild(homeButton);
+
+                    // add a button to go to the next episode on the bottom right of the player
+                    let nextButton = document.createElement('button');
+                    nextButton.classList.add('next-button');
+                    nextButton.classList.add('hidden');
+                    // add the class for get the icon
+                    nextButton.classList.add('plyr__control');
+                    nextButton.classList.add('plyr__controls__item');
+                    nextButton.innerHTML = `<span class="material-symbols-outlined">skip_next</span>`;
+                    nextButton.style.position = 'relative';
+                    // set the position of the button on the bottom right of the player
+                    nextButton.style.bottom = '0';
+                    nextButton.style.right = '0';
+                    nextButton.style.zIndex = '100';
+                    nextButton.style.padding = '0.5rem';
+                    nextButton.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                    nextButton.style.color = 'white';
+                    nextButton.style.borderRadius = '0.5rem 0 0 0';
+                    nextButton.style.display = 'flex';
+                    nextButton.style.alignItems = 'center';
+                    nextButton.style.justifyContent = 'center';
+                    nextButton.onclick = async () => {
+                        player.currentTime = 0;
+                    this.$router.replace(`/anime/${this.language}/${this.animeId}/episode/${parseInt(this.currentEpisode.toString()) + 1}`);
+                    this.currentEpisode = (parseInt(this.currentEpisode.toString()) + 1).toString();
+                    // check if the next episode exist in the anime data
+                    let nb_eps = parseInt(anime.nb_eps.replace(' Eps', ''));
+                    let currentEpisode = parseInt(this.currentEpisode.toString());
+                    let animeId = parseInt(this.animeId.toString());
+                    if (!isNaN(nb_eps) && anime.type == 'm0v1e') {
+                        removeAnime(animeId, this.language);
+                        this.$router.back();
+                        return;
+                    }
+                    if (nb_eps < currentEpisode) {
+                        removeAnime(animeId, this.language);
+                        this.$router.back();
+                        return;
+                    }
+                    await setVideoPlayer(anime);
+                    };
+                    ControlContainer?.appendChild(nextButton);
                     setAnime({
                         id: parseInt(this.animeId.toString()),
                         episode: parseInt(this.currentEpisode.toString()),
