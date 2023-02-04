@@ -41,6 +41,18 @@ export default {
                 duration: (this.$refs.player as HTMLMediaElement).duration,
             });
         },
+        hideControls: function () {
+            let hiddens = document.getElementsByClassName('hidden')
+            for (let i = 0; i < hiddens.length; i++) {
+                (hiddens[i] as HTMLElement).style.display = 'none';
+            }        
+        }, 
+        showControls: function () {
+            let hiddens = document.getElementsByClassName('hidden')
+            for (let i = 0; i < hiddens.length; i++) {
+                (hiddens[i] as HTMLElement).style.display = 'block';
+            }        
+        },
     },
     async mounted() {
         if (this.language != 'vf' && this.language != 'vostfr') return this.$router.push('/');
@@ -95,6 +107,31 @@ export default {
                     if (player && player.paused) {
                         player.play();
                     }
+                    let PlayerContainer = document.querySelector('.plyr');
+                    // add Button on the top right of the player to go to the Home page
+                    let homeButton = document.createElement('button');
+                    homeButton.classList.add('home-button');
+                    homeButton.classList.add('hidden');
+                    // add the class for get the icon
+                    homeButton.classList.add('plyr__control');
+                    homeButton.classList.add('plyr__controls__item');
+                    homeButton.innerHTML = `<span class="material-symbols-outlined">home</span> ${anime.title}`;
+                    homeButton.style.position = 'absolute';
+                    // set the position of the button on the top left of the player
+                    homeButton.style.top = '0';
+                    homeButton.style.left = '0';
+                    homeButton.style.zIndex = '100';
+                    homeButton.style.padding = '0.5rem';
+                    homeButton.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                    homeButton.style.color = 'white';
+                    homeButton.style.borderRadius = '0 0 0 0.5rem';
+                    homeButton.style.display = 'flex';
+                    homeButton.style.alignItems = 'center';
+                    homeButton.style.justifyContent = 'center';
+                    homeButton.onclick = () => {
+                        this.$router.push('/');
+                    };
+                    PlayerContainer?.appendChild(homeButton);
                     setAnime({
                         id: parseInt(this.animeId.toString()),
                         episode: parseInt(this.currentEpisode.toString()),
@@ -103,6 +140,8 @@ export default {
                         duration: (this.$refs.player as HTMLMediaElement).duration,
                     });
                 }, 1000);
+
+               
                 let isEnded = false;
                 player.onended = async () => {
                     if (isEnded) return;
@@ -135,7 +174,7 @@ export default {
 
 <template>
     <div class="h-screen">
-        <vue-plyr :options="options" ref="plyr">
+        <vue-plyr :options="options" ref="plyr" @controlshidden="hideControls" @controlsshown="showControls">
             <video ref="player" id="playme" controls @timeupdate="update"></video>
         </vue-plyr>
     </div>
