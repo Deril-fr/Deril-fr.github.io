@@ -67,7 +67,6 @@ export default {
                     homeButton.classList.add('hidden');
                     // add the class for get the icon
                     homeButton.classList.add('plyr__control');
-                    homeButton.classList.add('plyr__controls__item');
                     homeButton.innerHTML = `<span class="material-symbols-outlined">home</span> ${animeExist.title}`;
                     homeButton.style.position = 'absolute';
                     // set the position of the button on the top left of the player
@@ -91,7 +90,6 @@ export default {
                     nextButton.classList.add('next-button');
                     nextButton.classList.add('hidden');
                     // add the class for get the icon
-                    nextButton.classList.add('plyr__control');
                     nextButton.classList.add('plyr__controls__item');
                     nextButton.innerHTML = `<span class="material-symbols-outlined">skip_next</span>`;
                     nextButton.style.position = 'relative';
