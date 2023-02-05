@@ -6,7 +6,7 @@ import { load } from "cheerio";
 
 export default async function getM3U8(episodeUrl: string) {
     const neko_data = await (await fetch(episodeUrl)).text();
-    const pstream_url = /(else {\n(.*)video\[0] = ')(.*)(';)/gm.exec(neko_data)?.[3] as string;
+    const pstream_url = /(\n(.*)video\[0] = ')(.*)(';)/gm.exec(neko_data)?.[3] as string;
     const pstream_data = await (await fetch(pstream_url)).text();
     let pstream_script_url = /(https:\/\/www\.pstream\.net\/u\/player-script.*)(" type)/gm.exec(pstream_data)?.[1] as string;
     let baseurl = "https://www.pstream.net";
@@ -19,7 +19,7 @@ export default async function getM3U8(episodeUrl: string) {
         pstream_script_url = /(https:\/\/fusevideo\.net\/u\/player-script.*)(" type)/gm.exec(pstream_data)?.[1] as string;
         baseurl = "https://fusevideo.net";
     }
-
+    console.log(neko_data);
     if (!pstream_script_url) return false;
     const pstream_script = await (await fetch(pstream_script_url)).text();
 
