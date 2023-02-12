@@ -1,5 +1,6 @@
 import type Anime from "@/types/Anime";
 import type PstreamData from "@/types/PstreamData";
+import type FuseVideoData from "@/types/FuseVideoData";
 import type EpisodeReal from "@/types/EpisodeReal";
 import type LastEpisodes from "@/types/LastEpisodes";
 import { load } from "cheerio";
@@ -18,25 +19,43 @@ export default async function getM3U8(episodeUrl: string) {
     if (!pstream_script_url) {
         pstream_script_url = /(https:\/\/fusevideo\.net\/u\/player-script.*)(" type)/gm.exec(pstream_data)?.[1] as string;
         baseurl = "https://fusevideo.net";
-    }
-    console.log(neko_data);
+    };
     if (!pstream_script_url) return false;
     const pstream_script = await (await fetch(pstream_script_url)).text();
 
     const m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
-
-    const pstream: PstreamData = JSON.parse(atob(m3u8_url_B64).slice(2));
-
+    const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
+    console.log(b64);
+    if(baseurl === "https://www.pstream.net") {
+    const pstream: PstreamData = b64;
     const m3u8_url = pstream.mmmmmmmmmmmmmmmmmmmm;
-
     const subtitlesvtt = pstream.subtitlesvtt;
-
-
     return {
         uri: m3u8_url,
         subtitles: subtitlesvtt,
         baseurl: baseurl
     };
+    } else if (baseurl === "https://veestream.net") {
+        const pstream: PstreamData = b64;
+        const m3u8_url = pstream.mmmmmmmmmmmmmmmmmmmm;
+
+        const subtitlesvtt = pstream.subtitlesvtt;
+        return {
+            uri: m3u8_url,
+            subtitles: subtitlesvtt,
+            baseurl: baseurl
+        };
+    } else if (baseurl === "https://fusevideo.net") {
+        const pstream: FuseVideoData = b64;
+        const m3u8_url = pstream.ezofpjbzoiefhzofsdhvuzehfg;
+
+        const subtitlesvtt = pstream.subtitlesvtt;
+        return {
+            uri: m3u8_url,
+            subtitles: subtitlesvtt,
+            baseurl: baseurl
+        };
+    }
 }
 
 function convertHtmlToText(html: string) {

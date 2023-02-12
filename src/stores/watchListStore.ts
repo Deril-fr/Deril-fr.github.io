@@ -4,6 +4,5 @@ import type AnimeWatched from '../types/AnimeWatched';
 export const watchListStore: AnimeWatched[] = reactive(JSON.parse(localStorage.getItem('animeList') || '[]') as AnimeWatched[]);
 
 watch(watchListStore, () => {
-    console.log(watchListStore);
     localStorage.setItem('animeList', JSON.stringify(watchListStore));
 });

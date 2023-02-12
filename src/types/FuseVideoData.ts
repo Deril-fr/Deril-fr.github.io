@@ -1,6 +1,6 @@
-import type Subtitlesvtt from './Subtitlesvtt'
+import type Subtitlesvtt from "./Subtitlesvtt"
 
-export default interface PstreamData {
+export default interface FuseVideoData {
     enableTextTrackSettings: boolean
     enableTextTrackResize: boolean
     enableTextTrackExternal: boolean
@@ -9,6 +9,5 @@ export default interface PstreamData {
     enableAAB: boolean
     enableADI: boolean
     subtitlesvtt: Subtitlesvtt[]
-    mmmmmmmmmmmmmmmmmmmm: string
+    ezofpjbzoiefhzofsdhvuzehfg: string
 }
-
