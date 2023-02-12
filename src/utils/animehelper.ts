@@ -25,37 +25,28 @@ export default async function getM3U8(episodeUrl: string) {
 
     const m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
     const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
-    console.log(b64);
-    if(baseurl === "https://www.pstream.net") {
+
+    // from the object b64, get the m3u8 url with the "https" protocol
+
     const pstream: PstreamData = b64;
-    const m3u8_url = pstream.mmmmmmmmmmmmmmmmmmmm;
+    const m3u8_url = Object.values(pstream).find((data: any) => {
+        // check if data is a string
+        if (typeof data === "string") {
+            return data.startsWith("https://");
+        }
+    });
     const subtitlesvtt = pstream.subtitlesvtt;
+    console.log({
+        uri: m3u8_url,
+        subtitles: subtitlesvtt,
+        baseurl: baseurl
+    })
     return {
         uri: m3u8_url,
         subtitles: subtitlesvtt,
         baseurl: baseurl
     };
-    } else if (baseurl === "https://veestream.net") {
-        const pstream: PstreamData = b64;
-        const m3u8_url = pstream.mmmmmmmmmmmmmmmmmmmm;
-
-        const subtitlesvtt = pstream.subtitlesvtt;
-        return {
-            uri: m3u8_url,
-            subtitles: subtitlesvtt,
-            baseurl: baseurl
-        };
-    } else if (baseurl === "https://fusevideo.net") {
-        const pstream: FuseVideoData = b64;
-        const m3u8_url = pstream.ezofpjbzoiefhzofsdhvuzehfg;
-
-        const subtitlesvtt = pstream.subtitlesvtt;
-        return {
-            uri: m3u8_url,
-            subtitles: subtitlesvtt,
-            baseurl: baseurl
-        };
-    }
+    
 }
 
 function convertHtmlToText(html: string) {
