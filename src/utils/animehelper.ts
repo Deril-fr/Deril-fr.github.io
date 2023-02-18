@@ -22,8 +22,9 @@ export default async function getM3U8(episodeUrl: string) {
     for (const scriptSrc of scriptsSrc) {
         const pstream_script = await (await fetch(scriptSrc)).text();
         // check if the script contains the m3u8 url
-        const m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
+        let m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
         if (m3u8_url_B64) {
+            console.log(m3u8_url_B64);
             const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
             const pstream: PstreamData = b64;
             m3u8_url = Object.values(pstream).find((data: any) => {
@@ -35,6 +36,22 @@ export default async function getM3U8(episodeUrl: string) {
             // check if the script contains the subtitles
             subtitlesvtt = pstream.subtitlesvtt;
             break;
+        } else {
+            m3u8_url_B64 = /e.parseJSON\(n\)}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
+            if (m3u8_url_B64) {
+                console.log(m3u8_url_B64);
+                const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
+                const pstream: PstreamData = b64;
+                m3u8_url = Object.values(pstream).find((data: any) => {
+                    // check if data is a string
+                    if (typeof data === "string") {
+                        return data.startsWith("https://");
+                    }
+                });
+                // check if the script contains the subtitles
+                subtitlesvtt = pstream.subtitlesvtt;
+                break;
+            }
         }
     }
     if (m3u8_url !== "") {
