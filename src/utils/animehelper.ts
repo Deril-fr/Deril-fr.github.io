@@ -4,49 +4,48 @@ import type FuseVideoData from "@/types/FuseVideoData";
 import type EpisodeReal from "@/types/EpisodeReal";
 import type LastEpisodes from "@/types/LastEpisodes";
 import { load } from "cheerio";
+import type Subtitlesvtt from "@/types/Subtitlesvtt";
 
 export default async function getM3U8(episodeUrl: string) {
     const neko_data = await (await fetch(episodeUrl)).text();
     const pstream_url = /(\n(.*)video\[0] = ')(.*)(';)/gm.exec(neko_data)?.[3] as string;
     const pstream_data = await (await fetch(pstream_url)).text();
-    let pstream_script_url = /(https:\/\/www\.pstream\.net\/u.*)(" type)/gm.exec(pstream_data)?.[1] as string;
-    let baseurl = "https://www.pstream.net";
-    if (!pstream_script_url) {
-        pstream_script_url = /(https:\/\/veestream\.net\/u.*)(" type)/gm.exec(pstream_data)?.[1] as string;
-        baseurl = "https://veestream.net";
-    }
+    // extract base url from pstream_url to extract online the origine of the url. It's the base url of the video 
 
-    if (!pstream_script_url) {
-        pstream_script_url = /(https:\/\/fusevideo\.net\/u.*)(" type)/gm.exec(pstream_data)?.[1] as string;
-        baseurl = "https://fusevideo.net";
-    };
-    if (!pstream_script_url) return false;
-    const pstream_script = await (await fetch(pstream_script_url)).text();
-
-    const m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
-    const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
-
-    // from the object b64, get the m3u8 url with the "https" protocol
-
-    const pstream: PstreamData = b64;
-    const m3u8_url = Object.values(pstream).find((data: any) => {
-        // check if data is a string
-        if (typeof data === "string") {
-            return data.startsWith("https://");
+    const baseurl = pstream_url.split("/").slice(0, 3).join("/");
+    const loadedHTML = load(pstream_data);
+    // get every script tag in the page
+    const scripts = loadedHTML("script");
+    // Map every script tag to get online the src attribute 
+    const scriptsSrc = scripts.map((i, el) => loadedHTML(el).attr("src")).get();
+    let m3u8_url: string = "", subtitlesvtt: Subtitlesvtt[] = [];
+    for (const scriptSrc of scriptsSrc) {
+        const pstream_script = await (await fetch(scriptSrc)).text();
+        // check if the script contains the m3u8 url
+        const m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
+        if (m3u8_url_B64) {
+            const b64 = JSON.parse(atob(m3u8_url_B64).slice(2));
+            const pstream: PstreamData = b64;
+            m3u8_url = Object.values(pstream).find((data: any) => {
+                // check if data is a string
+                if (typeof data === "string") {
+                    return data.startsWith("https://");
+                }
+            });
+            // check if the script contains the subtitles
+            subtitlesvtt = pstream.subtitlesvtt;
+            break;
         }
-    });
-    const subtitlesvtt = pstream.subtitlesvtt;
-    console.log({
-        uri: m3u8_url,
-        subtitles: subtitlesvtt,
-        baseurl: baseurl
-    })
-    return {
-        uri: m3u8_url,
-        subtitles: subtitlesvtt,
-        baseurl: baseurl
-    };
-    
+    }
+    if (m3u8_url !== "") {
+        return {
+            uri: m3u8_url,
+            subtitlesvtt: subtitlesvtt,
+            baseurl: baseurl
+        }
+    } else {
+        return false;
+    }
 }
 
 function convertHtmlToText(html: string) {
@@ -75,7 +74,7 @@ export async function getSynopsisAndEpisodes(url: string) {
                 url_image: episode.url_image,
             };
         });
-      }
+    }
     const parsedSynopsis = /(<div class="synopsis">\n<p>\n)(.*)/gm.exec(data)?.[2]
     if (parsedSynopsis) {
         synopsis = parsedSynopsis
@@ -94,10 +93,10 @@ export async function getSynopsisAndEpisodes(url: string) {
 export async function getLastViewed(): Promise<LastEpisodes[]> {
     const res = await fetch("https://neko-sama.fr")
     const data = await res.text();
-    let lastEpisode: LastEpisodes[]= [];
+    let lastEpisode: LastEpisodes[] = [];
     const parsedData = /var lastEpisodes = (.+)\;/gm.exec(data);
     if (parsedData) {
-       lastEpisode = JSON.parse(parsedData[1]);
+        lastEpisode = JSON.parse(parsedData[1]);
     }
     return lastEpisode;
 }
