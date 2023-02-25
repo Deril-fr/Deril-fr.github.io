@@ -183,7 +183,7 @@ export default {
                         ipc.send('episodeUpdated', {
                             title: anime.title,
                             episode: this.currentEpisode,
-                            duration: player.duration,
+                            duration: (player.duration - player.currentTime) * 1000,
                             image_url: anime.url_image,
                             url: location.href,
                         });
@@ -214,6 +214,17 @@ export default {
                     let nb_eps = parseInt(anime.nb_eps.replace(' Eps', ''));
                     let currentEpisode = parseInt(this.currentEpisode.toString());
                     let animeId = parseInt(this.animeId.toString());
+                    try{
+                        const ipc = require('electron').ipcRenderer;
+                        ipc.send('episodeEnded', {
+                            title: anime.title,
+                            episode: this.currentEpisode,
+                            image_url: anime.url_image,
+                            url: location.href,
+                        });
+                    }catch(e){
+                        console.log("Ipc not available");
+                    }
                     if (!isNaN(nb_eps) && anime.type == 'm0v1e') {
                         removeAnime(animeId, this.language);
                         this.$router.back();
@@ -225,6 +236,35 @@ export default {
                         return;
                     }
                     await setVideoPlayer(anime);
+                };
+
+                player.onpause = () => {
+                    try{
+                        const ipc = require('electron').ipcRenderer;
+                        ipc.send('episodePaused', {
+                            title: anime.title,
+                            episode: this.currentEpisode,
+                            image_url: anime.url_image,
+                            url: location.href,
+                        });
+                    }catch(e){
+                        console.log("Ipc not available");
+                    }
+                };
+
+                player.onplay = () => {
+                    try{
+                        const ipc = require('electron').ipcRenderer;
+                        ipc.send('episodeUpdated', {
+                            title: anime.title,
+                            episode: this.currentEpisode,
+                            duration: (player.duration - player.currentTime) * 1000,
+                            image_url: anime.url_image,
+                            url: location.href,
+                        });
+                    }catch(e){
+                        console.log("Ipc not available");
+                    }
                 };
             }
         };
