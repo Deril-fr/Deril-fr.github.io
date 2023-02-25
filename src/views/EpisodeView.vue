@@ -227,7 +227,7 @@ export default {
 
 <template>
     <div class="h-screen">
-        <vue-plyr :options="options" ref="plyr" @controlshidden="hideControls" @controlsshown="showControls">
+        <vue-plyr :options="options" crossorigin="anonymous" ref="plyr" @controlshidden="hideControls" @controlsshown="showControls">
             <video ref="player" id="playme" controls @timeupdate="update"></video>
         </vue-plyr>
     </div>
