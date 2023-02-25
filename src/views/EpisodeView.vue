@@ -165,12 +165,6 @@ export default {
             this.title = anime.title;
 
             if (this.video && this.video.available) {
-                if(this.video.subtitles.length > 0){
-                   let videoPlayer = (document.querySelector("#playme") as HTMLMediaElement);
-                   if(videoPlayer){
-                    videoPlayer.innerHTML = `<track kind="captions" label="English captions" src="${this.video.subtitles[0].file}" srclang="fr" crossorigin="anonymous" default>`;
-                   }
-                }
                 let hlsPlayer = new hls();
                 hlsPlayer.loadSource(this.video.uri);
                 hlsPlayer.attachMedia(player);
@@ -184,6 +178,20 @@ export default {
                     if (player && player.paused) {
                         player.play();
                     }
+                    try{
+                        const ipc = require('electron').ipcRenderer;
+                        ipc.send('episodeUpdated', {
+                            title: anime.title,
+                            episode: this.currentEpisode,
+                            duration: player.duration,
+                            image_url: anime.url_image,
+                            url: location.href,
+                        });
+                    }catch(e){
+                        console.log("Ipc not available");
+                    }
+                   
+                    
 
                     setAnime({
                         id: parseInt(this.animeId.toString()),
@@ -228,7 +236,9 @@ export default {
 <template>
     <div class="h-screen">
         <vue-plyr :options="options" crossorigin="anonymous" ref="plyr" @controlshidden="hideControls" @controlsshown="showControls">
-            <video ref="player" id="playme" controls @timeupdate="update"></video>
+            <video ref="player" id="playme" controls @timeupdate="update" crossorigin="use-credentials" playsinline>
+                <track v-if="video && video.available && video.subtitles.length > 0" kind="captions" label="Sous titre VOSTFR" :src="video.subtitles[0].file" srclang="fr" crossorigin="anonymous" default>
+            </video>
         </vue-plyr>
     </div>
 </template>
