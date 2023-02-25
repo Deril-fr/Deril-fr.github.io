@@ -5,6 +5,7 @@ import type LastEpisodes from '@/types/LastEpisodes';
 import type Anime from '@/types/Anime';
 import { getLastViewed } from '@/utils/animehelper';
 import { ref } from 'vue';
+import NavBarComponentVue from '@/components/NavBarComponent.vue';
 
 let animeChunks = ref<
     {
@@ -28,15 +29,10 @@ getLastViewed().then((lastEpisodes) => {
 </script>
 
 <template>
-    <section v-if="animeChunks" class="px-10">
-        <div class="flex justify-between py-5">
-            <div @click="$router.push('/')" class="cursor-pointer">
-                <h1 class="text-3xl font-bold">Acceuil</h1>
-            </div>
-            <div @click="$router.push('/history')" class="cursor-pointer">
-                <h1 class="text-3xl font-bold">Historique</h1>
-            </div>
-        </div>
+    <NavBarComponentVue />
+    <br/>
+    <br/>
+    <section class="px-20 py-10">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-10">
             <div v-for="anime in animeChunks" :key="anime.animes.id + (anime.animes.lang as string)">
                 <LatestCardComponent :animeReal="anime.animes" :anime="anime.lastEpisodes" />

@@ -45,8 +45,8 @@ import { RouterLink } from 'vue-router';
             <li>
                 <ul class="flex gap-10 w-full">
                     <router-link to="/" :class="$router.currentRoute.value.path == '/' ? 'font-bold' : ''">Accueil</router-link>
-                    <router-link to="/search/vf" :class="$router.currentRoute.value.path == '/search/vf' ? 'font-bold' : ''">Vf</router-link>
-                    <router-link to="/search/vostfr" :class="$router.currentRoute.value.path == '/search/vostfr' ? 'font-bold' : ''">Vostfr</router-link>
+                    <router-link to="/latest" :class="$router.currentRoute.value.path == '/latest' ? 'font-bold' : ''">Dernières mises à jour</router-link>
+                    <router-link to="/history" :class="$router.currentRoute.value.path == '/history' ? 'font-bold' : ''">Historique</router-link>
                 </ul>
             </li>
 
