@@ -3,6 +3,7 @@ import { animesStore } from '@/stores/animeStore';
 import type Anime from '@/types/Anime';
 import type EpisodeReal from '@/types/EpisodeReal';
 import { getSynopsisAndEpisodes } from '@/utils/animehelper';
+import NavBarComponent from '@/components/NavBarComponent.vue';
 
 export default {
     data() {
@@ -25,6 +26,9 @@ export default {
 </script>
 
 <template>
+    <NavBarComponentVue />
+    <br />
+    <br />
     <div v-if="anime && datas?.coverURL">
 
         <div class="z-20 relative px-[10vw] lg:px-[20vw] py-10 grid lg:grid-cols-2 gap-5">
