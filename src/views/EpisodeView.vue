@@ -83,6 +83,14 @@ export default {
             homeButton.style.alignItems = 'center';
             homeButton.style.justifyContent = 'center';
             homeButton.onclick = () => {
+                try{
+                        const ipc = require('electron').ipcRenderer;
+                        ipc.send('episodeEnded', {
+                            test:"test"
+                        });
+                    }catch(e){
+                        console.log("Ipc not available");
+                    }
                 this.$router.push('/');
             };
             PlayerContainer?.appendChild(homeButton);
