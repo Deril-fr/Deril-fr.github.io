@@ -14,7 +14,7 @@ export default {
 
         signIn() {
             const provider = new GoogleAuthProvider();
-            signInWithRedirect(auth, provider);
+            signInWithPopup(auth, provider);
         },
 
         logOut() {
@@ -35,7 +35,7 @@ export default {
 
 <script setup lang="ts">
 import { auth } from '@/utils/database';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from '@firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut } from '@firebase/auth';
 import { RouterLink } from 'vue-router';
 </script>
 

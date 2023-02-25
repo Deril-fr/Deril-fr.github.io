@@ -4,7 +4,7 @@ import SpinnerComponent from './components/SpinnerComponent.vue';
 import HomeSkeleton from './components/HomeSkeleton.vue';
 import { animesStore } from './stores/animeStore';
 import { auth } from './utils/database';
-import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
+import {onAuthStateChanged } from 'firebase/auth';
 import { getAnimeList } from './utils/storage';
 import chunkify from './utils/chunkify';
 </script>
@@ -32,13 +32,6 @@ export default {
         document.title = 'JapanWatch';
         await this.loadAnimesAndCheckCors();
         if (!this.isNoCorsInstalled) return;
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-            // User is signed in.
-            const user = result.user;
-            await getAnimeList();
-        }
-
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 await getAnimeList();
