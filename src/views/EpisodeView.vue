@@ -228,10 +228,7 @@ export default {
 <template>
     <div class="h-screen">
         <vue-plyr :options="options" ref="plyr" @controlshidden="hideControls" @controlsshown="showControls">
-            <video ref="player" id="playme" controls @timeupdate="update">
-                        <track v-if="video && video.available" kind="subtitles" :src="video.subtitles[0].file" :label="video.subtitles[0].lang"
-                            :default="true" />
-            </video>
+            <video ref="player" id="playme" controls @timeupdate="update"></video>
         </vue-plyr>
     </div>
 </template>
