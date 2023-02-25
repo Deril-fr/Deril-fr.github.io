@@ -166,7 +166,7 @@ export default {
 
             if (this.video && this.video.available) {
                 if(this.video.subtitles.length > 0){
-                   let videoPlayer = (document.querySelector(".playme") as HTMLMediaElement);
+                   let videoPlayer = (document.querySelector("#playme") as HTMLMediaElement);
                    if(videoPlayer){
                     videoPlayer.innerHTML = `<track kind="captions" label="English captions" src="${this.video.subtitles[0].file}" srclang="fr" crossorigin="anonymous" default>`;
                    }
