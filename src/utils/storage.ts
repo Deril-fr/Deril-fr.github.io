@@ -49,46 +49,9 @@ export async function getAnimeList(): Promise<AnimeWatched[]> {
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 tempData = Object.values(data.animeList);
-                /**
-                * Compare watchListStore with tempData
-                * If watchListStore is empty, set watchListStore to tempData
-                * If watchListStore is not empty, compare watchListStore with tempData and check if there are more anime in tempData than watchListStore
-                * If there are more anime in tempData than watchListStore, set watchListStore to tempData by checking if the anime is already in watchListStore and the episode or the time is greater than the one in watchListStore
-                * If there are less anime in tempData than watchListStore, set watchListStore to tempData by checking if the anime is already in watchListStore and the episode or the time is greater than the one in watchListStore and remove the anime that is not in tempData
-                **/
-
-                if (watchListStore.length === 0) {
-                    watchListStore.push(...tempData);
-                } else {
-                    // check if there are more anime in tempData than watchListStore
-                    if (tempData.length > watchListStore.length) {
-                        // check if the anime is already in watchListStore and the episode or the time is greater than the one in watchListStore
-                        tempData.forEach((anime) => {
-                            if (watchListStore.find((e) => e.id === anime.id && e.lang === anime.lang)) {
-                                const index = watchListStore.indexOf(watchListStore.find((e) => e.id === anime.id && e.lang === anime.lang) as AnimeWatched);
-                                if (watchListStore[index].episode < anime.episode) {
-                                    watchListStore[index] = anime;
-                                }
-                            } else {
-                                watchListStore.push(anime);
-                            }
-                        });
-                    } else {
-                        // check if the anime is already in watchListStore and the episode or the time is greater than the one in watchListStore
-                        console.log("tempData is less than watchListStore");
-                        watchListStore.forEach((anime) => {
-                            if (tempData.find((e) => e.id === anime.id && e.lang === anime.lang)) {
-                                const index = tempData.indexOf(tempData.find((e) => e.id === anime.id && e.lang === anime.lang) as AnimeWatched);
-                                if (tempData[index].episode < anime.episode) {
-                                    tempData[index] = anime;
-                                }
-                            } else {
-                                removeAnime(anime.id, anime.lang);
-                            }
-                        });
-                        watchListStore.push(...tempData);
-                    }
-                }
+                tempData.forEach((anime) => {
+                    setAnime(anime);
+                });
             }else{
                 watchListStore.forEach((anime) => {
                      setAnime(anime);
