@@ -158,7 +158,7 @@ export default {
                 this.$router.back();
                 return;
             }
-            let m3u8 = await getM3U8('http://185.146.232.127' + episode.url);
+            let m3u8 = await getM3U8('https://185.146.232.127' + episode.url);
             if (!m3u8) return this.$router.back();
             this.video = {
                 mp4: false,
