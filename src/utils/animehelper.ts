@@ -91,7 +91,7 @@ export function convertEpisodeToNumber(episode: string) {
 }
 
 export async function getSynopsisAndEpisodes(url: string) {
-    const res = await fetch("https://185.146.232.127" + url)
+    const res = await fetch("http://185.146.232.127" + url)
     const data = await res.text();
     const parsedData = /var episodes = (.+)\;/gm.exec(data);
     let episodes: EpisodeReal[] = [], synopsis: string = "", coverURL: string = "";
@@ -123,7 +123,7 @@ export async function getSynopsisAndEpisodes(url: string) {
 }
 
 export async function getLastViewed(): Promise<LastEpisodes[]> {
-    const res = await fetch("https://185.146.232.127")
+    const res = await fetch("http://185.146.232.127")
     const data = await res.text();
     let lastEpisode: LastEpisodes[] = [];
     const parsedData = /var lastEpisodes = (.+)\;/gm.exec(data);

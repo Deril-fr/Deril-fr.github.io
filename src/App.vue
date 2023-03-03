@@ -20,8 +20,8 @@ export default {
     methods: {
         loadAnimesAndCheckCors: async function () {
             try {
-                animesStore.vf = await (await fetch('https://185.146.232.127/animes-search-vf.json')).json();
-                animesStore.vostfr = await (await fetch('https://185.146.232.127/animes-search-vostfr.json')).json();
+                animesStore.vf = await (await fetch('http://185.146.232.127/animes-search-vf.json')).json();
+                animesStore.vostfr = await (await fetch('http://185.146.232.127/animes-search-vostfr.json')).json();
             } catch (e) {
                 this.isNoCorsInstalled = false;
             }
