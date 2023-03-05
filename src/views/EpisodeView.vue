@@ -174,7 +174,7 @@ export default {
 
             if (this.video && this.video.available) {
                 let hlsPlayer = new hls();
-                hlsPlayer.loadSource(this.video.uri);
+                hlsPlayer.loadSource("https://video.ketsuna.workers.dev?url=" + encodeURIComponent(this.video.uri));
                 hlsPlayer.attachMedia(player);
                 setTimeout(() => {
                     if (animeWatched) {

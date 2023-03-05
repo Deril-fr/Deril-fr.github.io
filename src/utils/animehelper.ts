@@ -9,7 +9,7 @@ import type Subtitlesvtt from "@/types/Subtitlesvtt";
 export default async function getM3U8(episodeUrl: string) {
     const neko_data = await (await fetch(episodeUrl)).text();
     const pstream_url = /(\n(.*)video\[0] = ')(.*)(';)/gm.exec(neko_data)?.[3] as string;
-    const pstream_data = await (await fetch(pstream_url)).text();
+    const pstream_data = await (await fetch("https://video.ketsuna.workers.dev/?url="+encodeURIComponent(pstream_url))).text();
     // extract base url from pstream_url to extract online the origine of the url. It's the base url of the video 
     const baseurl = pstream_url.split("/").slice(0, 3).join("/");
     const loadedHTML = load(pstream_data);
@@ -19,7 +19,7 @@ export default async function getM3U8(episodeUrl: string) {
     const scriptsSrc = scripts.map((i, el) => loadedHTML(el).attr("src")).get();
     let m3u8_url: string = "", subtitlesvtt: Subtitlesvtt[] = [];
     for (const scriptSrc of scriptsSrc) {
-        const pstream_script = await (await fetch(scriptSrc)).text();
+        const pstream_script = await (await fetch("https://video.ketsuna.workers.dev/?url="+encodeURIComponent(scriptSrc))).text();
         // check if the script contains the m3u8 url
         let m3u8_url_B64 = /e.parseJSON\(atob\(t\).slice\(2\)\)\}\(\"([^;]*)"\),/gm.exec(pstream_script)?.[1] as string;
         if (m3u8_url_B64) {
